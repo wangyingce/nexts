@@ -522,7 +522,7 @@ export function Settings() {
             </ListItem>
           ) : null} */}
 
-          <ListItem
+          {/* <ListItem
             title={Locale.Settings.Usage.Title}
             subTitle={
               showUsage
@@ -544,9 +544,9 @@ export function Settings() {
                 onClick={() => checkUsage(true)}
               />
             )}
-          </ListItem>
+          </ListItem> */}
 
-          {!accessStore.hideUserApiKey ? (
+          {/* {!accessStore.hideUserApiKey ? (
             <ListItem
               title={Locale.Settings.Endpoint.Title}
               subTitle={Locale.Settings.Endpoint.SubTitle}
@@ -559,7 +559,7 @@ export function Settings() {
                 }
               ></input>
             </ListItem>
-          ) : null}
+          ) : null} */}
         </List>
 
         <List>
