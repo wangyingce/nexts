@@ -8,7 +8,7 @@ const cn = {
   },
   Auth: {
     Title: "需要密码",
-    Tips: "管理员开启了密码验证，请在下方填入访问码",
+    Tips: "已开启了密码验证，请在下方填入访问码",
     Input: "在此处填写访问码",
     Confirm: "确认",
     Later: "稍后再说",
@@ -16,7 +16,7 @@ const cn = {
   ChatItem: {
     ChatItemCount: (count: number) => `${count} 条对话`,
   },
-  Chat: {
+  Chat: { 
     SubTitle: (count: number) => `与 AI 的 ${count} 条对话`,
     Actions: {
       ChatList: "查看消息列表",
@@ -177,7 +177,7 @@ const cn = {
     },
     AccessCode: {
       Title: "访问密码",
-      SubTitle: "管理员已开启加密访问",
+      SubTitle: "已开启加密访问",
       Placeholder: "请输入访问密码",
     },
     Endpoint: {
