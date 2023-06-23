@@ -1,0 +1,12 @@
+.sinfo-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.sinfo-page img {
+  max-width: 50%;
+  max-height: 50%;
+  object-fit: contain; /* 调整图像在容器中的适应方式 */
+}

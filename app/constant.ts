@@ -1,7 +1,7 @@
 export const OWNER = "Yidadaa";
 export const REPO = "ChatGPT-Next-Web";
 export const REPO_URL = `https://github.com/${OWNER}/${REPO}`;
-export const CS_URL = `https://wx1.sinaimg.cn/orj360/006XaNaMly1hf8fyip9rdj30fv0h678b.jpg`;
+export const CS_URL = `/app/icons/eye.svg`;
 export const ISSUE_URL = `https://github.com/${OWNER}/${REPO}/issues`;
 export const UPDATE_URL = `${REPO_URL}#keep-updated`;
 export const FETCH_COMMIT_URL = `https://api.github.com/repos/${OWNER}/${REPO}/commits?per_page=1`;
@@ -16,6 +16,7 @@ export enum Path {
   NewChat = "/new-chat",
   Masks = "/masks",
   Auth = "/auth",
+  Sinfo = "/sinfo",
 }
 
 export enum SlotID {
