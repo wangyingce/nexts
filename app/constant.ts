@@ -1,7 +1,7 @@
 export const OWNER = "Yidadaa";
 export const REPO = "ChatGPT-Next-Web";
 export const REPO_URL = `https://github.com/${OWNER}/${REPO}`;
-export const CS_URL = `https://oimages2.shimonote.com/fpvhKuRU2TEc2FX2.png?auth_key=1687523702-1974d889b3aa49d7adc25f7fae4a103a-0-bb1731efb95baa9e7a3a16193331b73b&response-content-disposition=inline%3B+filename%3D%22%25E4%25B8%25B4%25E6%2597%25B6%25E5%25AE%25A2%25E6%259C%258D.png%22%3B+filename%2A%3DUTF-8%27%27%25E4%25B8%25B4%25E6%2597%25B6%25E5%25AE%25A2%25E6%259C%258D.png`;
+export const CS_URL = `https://wx1.sinaimg.cn/orj360/006XaNaMly1hf8fyip9rdj30fv0h678b.jpg`;
 export const ISSUE_URL = `https://github.com/${OWNER}/${REPO}/issues`;
 export const UPDATE_URL = `${REPO_URL}#keep-updated`;
 export const FETCH_COMMIT_URL = `https://api.github.com/repos/${OWNER}/${REPO}/commits?per_page=1`;
