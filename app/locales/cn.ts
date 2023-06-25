@@ -9,6 +9,9 @@ const cn = {
   Auth: {
     Title: "需要密码",
     Tips: "已开启了密码验证，请在下方填入访问码",
+    phonePlaceholder: "在此处填写手机号",
+    yzmBtnText: "获取验证码",
+    yzmInputPlaceholder: "验证码",
     Input: "在此处填写访问码",
     Confirm: "确认",
     Later: "稍后再说",
@@ -16,7 +19,7 @@ const cn = {
   ChatItem: {
     ChatItemCount: (count: number) => `${count} 条对话`,
   },
-  Chat: { 
+  Chat: {
     SubTitle: (count: number) => `与 AI 的 ${count} 条对话`,
     Actions: {
       ChatList: "查看消息列表",
