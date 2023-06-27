@@ -53,7 +53,8 @@ const fr: PartialLocaleType = {
       "La réinitialisation supprimera l'historique de la conversation actuelle ainsi que la mémoire de l'historique. Êtes-vous sûr de vouloir procéder à la réinitialisation?",
   },
   Home: {
-    NewChat: "Nouvelle discussion",
+    KeFu: "Call-center",
+    NewChat: "Dialogue",
     DeleteChat: "Confirmer la suppression de la conversation sélectionnée ?",
     DeleteToast: "Conversation supprimée",
     Revert: "Revenir en arrière",
