@@ -51,13 +51,13 @@ export function MyApi() {
           });
           const db = await dbStr.json();
           if (!db.data) {
-            message.error(`请填写正确的openaiKey,${db.msg}`);
+            message.error(`请填写正确的invitationcode,${db.msg}`);
             return;
           }
 
-          if (values.openaiKey) {
+          if (values.invitationcode) {
             message.info(
-              `${values.openaiKey}: 剩余次数: ${db.data?.canUseNum}`,
+              `${values.invitationcode}: 剩余次数: ${db.data?.canUseNum}`,
               5,
             );
           } else {
@@ -66,8 +66,8 @@ export function MyApi() {
           }
         }}
       >
-        <Form.Item label="openaiKey" name="openaiKey">
-          <Input placeholder="openaiKey，不填查询全部" />
+        <Form.Item label="invitationcode" name="invitationcode">
+          <Input placeholder="invitationcode，不填查询全部" />
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type="primary" htmlType="submit">
@@ -88,9 +88,9 @@ export function MyApi() {
         }}
       >
         <Form.Item
-          label="openaiKey"
-          name="openaiKey"
-          rules={[{ required: true, message: "请填写openaiKey" }]}
+          label="invitationcode"
+          name="invitationcode"
+          rules={[{ required: true, message: "请填写invitationcode" }]}
         >
           <Input />
         </Form.Item>
@@ -122,9 +122,9 @@ export function MyApi() {
         }}
       >
         <Form.Item
-          label="openaiKey"
-          name="openaiKey"
-          rules={[{ required: true, message: "请填写openaiKey" }]}
+          label="invitationcode"
+          name="invitationcode"
+          rules={[{ required: true, message: "请填写invitationcode" }]}
         >
           <Input />
         </Form.Item>

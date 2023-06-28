@@ -28,7 +28,8 @@ export class ChatGPTApi implements LLMApi {
     const dbArray = db.data;
 
     let currentInfo: any = dbArray.find(
-      (item: any) => item.openaiKey === useAccessStore.getState().accessCode,
+      (item: any) =>
+        item.invitationcode === useAccessStore.getState().accessCode,
     );
     if (currentInfo) {
       // console.log(parseInt(currentInfo.canUseNum),parseInt(currentInfo.canUseNum)<1)
@@ -92,7 +93,7 @@ export class ChatGPTApi implements LLMApi {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                openaiKey: useAccessStore.getState().accessCode,
+                invitationcode: useAccessStore.getState().accessCode,
                 addNum: -1,
               }),
             });

@@ -8,7 +8,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   let content = fs.readFileSync("db.json", "utf8");
   let arrays = JSON.parse(content);
   let currentPerson: any = arrays.find(
-    (item: any) => item.openaiKey === req.body.openaiKey,
+    (item: any) => item.invitationcode === req.body.invitationcode,
   );
   if (req.body?.createNew === "createNew" && currentPerson) {
     res.status(200).json({ code: -1, data: null, msg: "已经存在无需初始化" });
@@ -25,7 +25,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     currentPerson.updateTime = new Date().toLocaleString();
   } else if (req.body?.createNew === "createNew") {
     arrays.push({
-      openaiKey: req.body.openaiKey,
+      invitationcode: req.body.invitationcode,
       canUseNum: parseInt(req.body.canUseNum),
       updateTime: new Date().toLocaleString(),
     });

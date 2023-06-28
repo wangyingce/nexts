@@ -4,8 +4,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     // console.log('req.body=',req.body);
     const content = fs.readFileSync('db.json', 'utf8');
     let finallyData:any=JSON.parse(content);
-    if(req.body.openaiKey){
-        finallyData=finallyData.filter((item:any)=>item.openaiKey===req.body.openaiKey)[0];
+    if(req.body.invitationcode){
+        finallyData=finallyData.filter((item:any)=>item.invitationcode===req.body.invitationcode)[0];
     }
     // console.log(finallyData)
     res.status(200).json({code:200, data: finallyData });
