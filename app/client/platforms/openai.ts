@@ -23,6 +23,21 @@ export class ChatGPTApi implements LLMApi {
   }
 
   async chat(options: ChatOptions) {
+    const dbStr = await fetch("/api/getNameSpace");
+    const db = await dbStr.json();
+    const dbArray = db.data;
+
+    let currentInfo: any = dbArray.find(
+      (item: any) =>
+        item.invitationcode === useAccessStore.getState().accessCode,
+    );
+    if (currentInfo) {
+      // console.log(parseInt(currentInfo.canUseNum),parseInt(currentInfo.canUseNum)<1)
+      if (parseInt(currentInfo.canUseNum) < 1) {
+        options.onFinish("已经没有可用的次数了");
+        return;
+      }
+    }
     const messages = options.messages.map((v) => ({
       role: v.role,
       content: v.content,
@@ -70,7 +85,20 @@ export class ChatGPTApi implements LLMApi {
         let responseText = "";
         let finished = false;
 
-        const finish = () => {
+        const finish = async (type?: any, header?: any) => {
+          if (type === 3 /* 标准回答完毕 */) {
+            const response = await fetch("/api/updateDB", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                invitationcode: useAccessStore.getState().accessCode,
+                addNum: -1,
+              }),
+            });
+            const data = await response.json();
+          }
           if (!finished) {
             options.onFinish(responseText);
             finished = true;
@@ -78,12 +106,13 @@ export class ChatGPTApi implements LLMApi {
         };
 
         controller.signal.onabort = finish;
-
+        let header: any = {};
         fetchEventSource(chatPath, {
           ...chatPayload,
           async onopen(res) {
             clearTimeout(requestTimeoutId);
             const contentType = res.headers.get("content-type");
+            header = res.headers;
             console.log(
               "[OpenAI] request response content type: ",
               contentType,
@@ -91,7 +120,7 @@ export class ChatGPTApi implements LLMApi {
 
             if (contentType?.startsWith("text/plain")) {
               responseText = await res.clone().text();
-              return finish();
+              return finish(1);
             }
 
             if (
@@ -118,12 +147,12 @@ export class ChatGPTApi implements LLMApi {
 
               responseText = responseTexts.join("\n\n");
 
-              return finish();
+              return finish(2);
             }
           },
           onmessage(msg) {
             if (msg.data === "[DONE]" || finished) {
-              return finish();
+              return finish(3, header);
             }
             const text = msg.data;
             try {
@@ -138,7 +167,7 @@ export class ChatGPTApi implements LLMApi {
             }
           },
           onclose() {
-            finish();
+            finish(4);
           },
           onerror(e) {
             options.onError?.(e);
