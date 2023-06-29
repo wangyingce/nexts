@@ -23,21 +23,23 @@ export class ChatGPTApi implements LLMApi {
   }
 
   async chat(options: ChatOptions) {
-    const dbStr = await fetch("/api/getNameSpace");
-    const db = await dbStr.json();
-    const dbArray = db.data;
+    try {
+      const dbStr = await fetch("/api/getNameSpace");
+      const db = await dbStr.json();
+      const dbArray = db.data;
 
-    let currentInfo: any = dbArray.find(
-      (item: any) =>
-        item.invitationcode === useAccessStore.getState().accessCode,
-    );
-    if (currentInfo) {
-      // console.log(parseInt(currentInfo.canUseNum),parseInt(currentInfo.canUseNum)<1)
-      if (parseInt(currentInfo.canUseNum) < 1) {
-        options.onFinish("已经没有可用的次数了");
-        return;
+      let currentInfo: any = dbArray.find(
+        (item: any) =>
+          item.invitationcode === useAccessStore.getState().accessCode,
+      );
+      if (currentInfo) {
+        // console.log(parseInt(currentInfo.canUseNum),parseInt(currentInfo.canUseNum)<1)
+        if (parseInt(currentInfo.canUseNum) < 1) {
+          options.onFinish("已经没有可用的次数了");
+          return;
+        }
       }
-    }
+    } catch (error) {}
     const messages = options.messages.map((v) => ({
       role: v.role,
       content: v.content,
@@ -87,17 +89,19 @@ export class ChatGPTApi implements LLMApi {
 
         const finish = async (type?: any, header?: any) => {
           if (type === 3 /* 标准回答完毕 */) {
-            const response = await fetch("/api/updateDB", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                invitationcode: useAccessStore.getState().accessCode,
-                addNum: -1,
-              }),
-            });
-            const data = await response.json();
+            try {
+              const response = await fetch("/api/updateDB", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  invitationcode: useAccessStore.getState().accessCode,
+                  addNum: -1,
+                }),
+              });
+              const data = await response.json();
+            } catch (error) {}
           }
           if (!finished) {
             options.onFinish(responseText);
