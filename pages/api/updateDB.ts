@@ -1,14 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
-
-const cFILE = "./public/db.json";
-
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.body.createNew && req.body?.createNew !== "createNew") {
     res.status(200).json({ code: -1, data: null, msg: "管理员密码错误" });
     return;
   }
-  let content = fs.readFileSync(cFILE, "utf8");
+  let content = fs.readFileSync("db.json", "utf8");
   let arrays = JSON.parse(content);
   let currentPerson: any = arrays.find(
     (item: any) => item.invitationcode === req.body.invitationcode,
@@ -33,6 +30,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       updateTime: new Date().toLocaleString(),
     });
   }
-  fs.writeFileSync(cFILE, JSON.stringify(arrays));
+  fs.writeFileSync("db.json", JSON.stringify(arrays));
   res.status(200).json({ code: 200, data: arrays });
 }
