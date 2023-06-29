@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
 
-const cFILE = "db.json";
+const cFILE = "./db.json";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.body.createNew && req.body?.createNew !== "createNew") {
