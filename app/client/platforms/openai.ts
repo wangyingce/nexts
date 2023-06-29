@@ -23,59 +23,6 @@ export class ChatGPTApi implements LLMApi {
   }
 
   async chat(options: ChatOptions) {
-    const ic = useAccessStore.getState().accessCode;
-    try {
-      const response = await fetch("/api/querycanusenum", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ic }),
-      });
-      const data = await response.json();
-      console.log("data=", data);
-      const canUseNum = data.canUseNum;
-      console.log("canUseNum=", canUseNum);
-      if (!canUseNum) {
-        options.onFinish("canUseNum为空了，联系客服吧");
-        return;
-      } else if (parseInt(canUseNum) < 1) {
-        options.onFinish("canUseNum小于1，该充钱了");
-        return;
-        //通过了querycanusenum，改进行扣减subtractioncanusenum了
-      } else {
-        try {
-          const response = await fetch("/api/subtractioncanusenum", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ ic }),
-          });
-          const data = await response.json();
-          const exmsg = data.exmsg;
-          const excd = data.code;
-          if (excd === "500") {
-            console.log("exmsg=", exmsg);
-            options.onFinish("subtractioncanusenum没成功，联系客服吧");
-            return;
-          } else {
-            console.log("subtractioncanusenum没成功", exmsg);
-          }
-        } catch (error) {
-          console.log("subtractioncanusenum没成功，联系客服吧", error);
-          options.onFinish("subtractioncanusenum没成功，联系客服吧");
-          return;
-        }
-      }
-    } catch (error) {
-      console.log("执行：querycanusenum or subtractioncanusenum没sus", error);
-      options.onFinish(
-        "执行：querycanusenum or subtractioncanusenum没sus，联系客服吧",
-      );
-      return;
-    }
-
     const messages = options.messages.map((v) => ({
       role: v.role,
       content: v.content,
@@ -123,7 +70,67 @@ export class ChatGPTApi implements LLMApi {
         let responseText = "";
         let finished = false;
 
-        const finish = () => {
+        const finish = async (type?: any, header?: any) => {
+          if (type === 3 /* 标准回答完毕 */) {
+            //添加邀请码算对话次数的模块-s
+            const ic = useAccessStore.getState().accessCode;
+            try {
+              const response = await fetch("/api/querycanusenum", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ ic }),
+              });
+              const data = await response.json();
+              console.log("data=", data);
+              const canUseNum = data.canUseNum;
+              console.log("canUseNum=", canUseNum);
+              if (!canUseNum) {
+                options.onFinish("canUseNum为空了，联系客服吧");
+                return;
+              } else if (parseInt(canUseNum) < 1) {
+                options.onFinish("canUseNum小于1，该充钱了");
+                return;
+                //通过了querycanusenum，改进行扣减subtractioncanusenum了
+              } else {
+                try {
+                  const response = await fetch("/api/subtractioncanusenum", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ ic }),
+                  });
+                  const data = await response.json();
+                  const exmsg = data.exmsg;
+                  const excd = data.code;
+                  if (excd === "500") {
+                    console.log("exmsg=", exmsg);
+                    options.onFinish("subtractioncanusenum没成功，联系客服吧");
+                    return;
+                  } else {
+                    console.log("subtractioncanusenum成功", exmsg);
+                  }
+                } catch (error) {
+                  console.log("subtractioncanusenum没成功，联系客服吧", error);
+                  options.onFinish("subtractioncanusenum没成功，联系客服吧");
+                  return;
+                }
+              }
+            } catch (error) {
+              console.log(
+                "执行：querycanusenum or subtractioncanusenum没sus",
+                error,
+              );
+              options.onFinish(
+                "执行：querycanusenum or subtractioncanusenum没sus，联系客服吧",
+              );
+              return;
+            }
+            //添加邀请码算对话次数的模块-e
+          }
+
           if (!finished) {
             options.onFinish(responseText);
             finished = true;
@@ -131,12 +138,13 @@ export class ChatGPTApi implements LLMApi {
         };
 
         controller.signal.onabort = finish;
-
+        let header: any = {};
         fetchEventSource(chatPath, {
           ...chatPayload,
           async onopen(res) {
             clearTimeout(requestTimeoutId);
             const contentType = res.headers.get("content-type");
+            header = res.headers;
             console.log(
               "[OpenAI] request response content type: ",
               contentType,
@@ -144,7 +152,7 @@ export class ChatGPTApi implements LLMApi {
 
             if (contentType?.startsWith("text/plain")) {
               responseText = await res.clone().text();
-              return finish();
+              return finish(1);
             }
 
             if (
@@ -170,13 +178,12 @@ export class ChatGPTApi implements LLMApi {
               }
 
               responseText = responseTexts.join("\n\n");
-
-              return finish();
+              return finish(2);
             }
           },
           onmessage(msg) {
             if (msg.data === "[DONE]" || finished) {
-              return finish();
+              return finish(3, header);
             }
             const text = msg.data;
             try {
@@ -191,7 +198,7 @@ export class ChatGPTApi implements LLMApi {
             }
           },
           onclose() {
-            finish();
+            finish(4);
           },
           onerror(e) {
             options.onError?.(e);
