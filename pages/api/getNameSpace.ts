@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import fs from 'fs';
 
-const cFILE = "./api/db.json";
+const cFILE = "db.json";
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
     // console.log('req.body=',req.body);
     const content = fs.readFileSync(cFILE, 'utf8');
