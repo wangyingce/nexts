@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
-import path from 'path';
-const cFILE = path.join(process.cwd(), 'api', 'db.json');
+
+const cFILE = "./api/db.json";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.body.createNew && req.body?.createNew !== "createNew") {
