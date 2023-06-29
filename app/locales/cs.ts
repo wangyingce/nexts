@@ -53,7 +53,6 @@ const cs: PartialLocaleType = {
       "Resetováním se vymaže historie aktuálních konverzací i paměť historie pokynů. Opravdu chcete provést obnovu?",
   },
   Home: {
-    KeFu: "Dịch vụ",
     NewChat: "Nový chat",
     DeleteChat: "Potvrzujete smazání vybrané konverzace?",
     DeleteToast: "Chat smazán",

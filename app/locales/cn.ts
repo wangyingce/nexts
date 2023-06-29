@@ -16,7 +16,7 @@ const cn = {
   ChatItem: {
     ChatItemCount: (count: number) => `${count} 条对话`,
   },
-  Chat: {
+  Chat: { 
     SubTitle: (count: number) => `与 AI 的 ${count} 条对话`,
     Actions: {
       ChatList: "查看消息列表",
@@ -90,7 +90,6 @@ const cn = {
     ResetConfirm: "确认清空历史摘要？",
   },
   Home: {
-    KeFu: "客服",
     NewChat: "新的聊天",
     DeleteChat: "确认删除选中的对话？",
     DeleteToast: "已删除会话",

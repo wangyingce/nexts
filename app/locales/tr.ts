@@ -53,7 +53,6 @@ const tr: PartialLocaleType = {
       "Sıfırlama, geçerli görüşme geçmişini ve geçmiş belleği siler. Sıfırlamak istediğinizden emin misiniz?",
   },
   Home: {
-    KeFu: "Çağrı Merkezi",
     NewChat: "Yeni Sohbet",
     DeleteChat: "Seçili sohbeti silmeyi onaylıyor musunuz?",
     DeleteToast: "Sohbet Silindi",

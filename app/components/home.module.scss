@@ -62,26 +62,7 @@
     }
   }
 }
-.kefu{
-    background-color: var(--white);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    overflow: hidden;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
-    outline: none;
-    border: none;
-    color: var(--black);
-    text-decoration: none;
-    font-size: 12px;
 
-}
 .sidebar-drag {
   $width: 10px;
 

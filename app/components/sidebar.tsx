@@ -177,9 +177,8 @@ export function SideBar(props: { className?: string }) {
             </Link>
           </div>
           <div className={styles["sidebar-action"]}>
-            <Link to={Path.Sinfo} className={styles["kefu"]}>
-              {/* <IconButton icon={<ShareIcon />} shadow /> */}
-              <div>{Locale.Home.KeFu}</div>
+            <Link to={Path.Sinfo}>
+              <IconButton icon={<ShareIcon />} shadow />
             </Link>
           </div>
         </div>

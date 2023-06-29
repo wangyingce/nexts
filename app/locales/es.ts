@@ -53,7 +53,6 @@ const es: PartialLocaleType = {
       "Resetting will clear the current conversation history and historical memory. Are you sure you want to reset?",
   },
   Home: {
-    KeFu: "Call-center",
     NewChat: "Nuevo chat",
     DeleteChat: "¿Confirmar eliminación de la conversación seleccionada?",
     DeleteToast: "Chat Deleted",

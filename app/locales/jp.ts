@@ -53,7 +53,6 @@ const jp: PartialLocaleType = {
       "リセット後、現在のチャット履歴と過去のメモリがクリアされます。リセットしてもよろしいですか？",
   },
   Home: {
-    KeFu: "連絡して",
     NewChat: "新しいチャット",
     DeleteChat: "選択したチャットを削除してもよろしいですか？",
     DeleteToast: "チャットが削除されました",
