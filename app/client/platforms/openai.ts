@@ -23,6 +23,59 @@ export class ChatGPTApi implements LLMApi {
   }
 
   async chat(options: ChatOptions) {
+    const ic = useAccessStore.getState().accessCode;
+    try {
+      const response = await fetch("/api/querycanusenum", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ic }),
+      });
+      const data = await response.json();
+      console.log("data=", data);
+      const canUseNum = data.canUseNum;
+      console.log("canUseNum=", canUseNum);
+      if (!canUseNum) {
+        options.onFinish("canUseNum为空了，联系客服吧");
+        return;
+      } else if (parseInt(canUseNum) < 1) {
+        options.onFinish("canUseNum小于1，该充钱了");
+        return;
+        //通过了querycanusenum，改进行扣减subtractioncanusenum了
+      } else {
+        try {
+          const response = await fetch("/api/subtractioncanusenum", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ ic }),
+          });
+          const data = await response.json();
+          const exmsg = data.exmsg;
+          const excd = data.code;
+          if (excd === "500") {
+            console.log("exmsg=", exmsg);
+            options.onFinish("subtractioncanusenum没成功，联系客服吧");
+            return;
+          } else {
+            console.log("subtractioncanusenum没成功", exmsg);
+          }
+        } catch (error) {
+          console.log("subtractioncanusenum没成功，联系客服吧", error);
+          options.onFinish("subtractioncanusenum没成功，联系客服吧");
+          return;
+        }
+      }
+    } catch (error) {
+      console.log("执行：querycanusenum or subtractioncanusenum没sus", error);
+      options.onFinish(
+        "执行：querycanusenum or subtractioncanusenum没sus，联系客服吧",
+      );
+      return;
+    }
+
     const messages = options.messages.map((v) => ({
       role: v.role,
       content: v.content,
