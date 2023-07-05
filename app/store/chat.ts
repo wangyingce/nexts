@@ -235,6 +235,54 @@ export const useChatStore = create<ChatStore>()(
       },
 
       async onUserInput(content) {
+        const urlParams = new URLSearchParams(window.location.search);
+        let ic = urlParams.get("ic");
+        let question: any = "你好";
+        let history: any = [];
+        ic = "wangyingce";
+        try {
+          const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              question,
+              history,
+              ic,
+            }),
+          });
+          const data = await response.json();
+          console.log("data", data);
+
+          if (data.error) {
+            alert("出错了adsfaikhfklk");
+            // setError(data.error);
+          }
+          // else {
+          //   setMessageState((state) => ({
+          //     ...state,
+          //     messages: [
+          //       ...state.messages,
+          //       {
+          //         type: 'apiMessage',
+          //         message: data.text,
+          //         // sourceDocs: data.sourceDocuments,
+          //       },
+          //     ],
+          //     history: [...state.history, [question, data.text]],
+          //   }));
+          // }
+          console.log("messageState");
+
+          //scroll to bottom
+        } catch (error) {
+          console.log("error34234523423", error);
+        }
+
+        if (new Date().getTime() !== 100) {
+          return;
+        }
         const session = get().currentSession();
         const modelConfig = session.mask.modelConfig;
 
