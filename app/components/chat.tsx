@@ -542,8 +542,16 @@ export function Chat() {
 
   const doSubmit = (userInput: string) => {
     if (userInput.trim() === "") return;
-    setIsLoading(true);
-    chatStore.onUserInput(userInput).then(() => setIsLoading(false));
+    // setIsLoading(true);
+    chatStore
+      .onUserInput(userInput)
+      .then((res: any) => {
+        console.log("回调回来了123kjadf", res);
+        // setIsLoading(false)
+      })
+      .catch((err: any) => {
+        console.log("err8786876h", err);
+      });
     localStorage.setItem(LAST_INPUT_KEY, userInput);
     setUserInput("");
     setPromptHints([]);
@@ -671,7 +679,8 @@ export function Chat() {
     (session.clearContextIndex ?? -1) >= 0
       ? session.clearContextIndex! + context.length
       : -1;
-
+  // console.log(context);
+  // console.log(session.messages);
   // preview messages
   const messages = context
     .concat(session.messages as RenderMessage[])
@@ -701,7 +710,7 @@ export function Chat() {
           ]
         : [],
     );
-
+  // console.log(messages)
   const [showPromptModal, setShowPromptModal] = useState(false);
 
   const renameSession = () => {
@@ -871,6 +880,7 @@ export function Chat() {
                         (message.preview || message.content.length === 0) &&
                         !isUser
                       }
+                      // loading={true}
                       onContextMenu={(e) => onRightClick(e, message)}
                       onDoubleClickCapture={() => {
                         if (!isMobileScreen) return;

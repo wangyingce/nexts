@@ -14,10 +14,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  console.log('==============');
-  console.log('==============');
-  console.log('==============');
-  console.log('==============');
+  // setTimeout(() => {
+  //   res.status(200).json({text: 'success'});
+  // }, 3000);
+  // return 
   const { question, history, ic } = req.body;
 
   console.log('question', question);
@@ -42,9 +42,12 @@ export default async function handler(
   }
   // OpenAI recommends replacing newlines with spaces for best results
   const sanitizedQuestion = question.trim().replaceAll('\n', ' ');
-
+  console.log('=====1')
+  // console.log(pinecone)
   try {
+    console.log('=====2',PINECONE_INDEX_NAME)
     const index = pinecone.Index(PINECONE_INDEX_NAME);
+    console.log('=====3')
 
     /* create vectorstore*/
     const vectorStore = await PineconeStore.fromExistingIndex(
@@ -56,15 +59,21 @@ export default async function handler(
       },
     );
 
+    console.log('vectorStore');
+    // console.log(vectorStore);
     //create chain
     const chain = makeChain(vectorStore);
-    //Ask a question using chat history
-    const response = await chain.call({
+    console.log({
       question: sanitizedQuestion,
       chat_history: history || [],
+    })
+    const response = await chain.call({
+      question: sanitizedQuestion,
+      chat_history: [] || [],
     });
-
-    console.log('response', response);
+    // console.log(response);
+    // console.log('response', response);
+    
     res.status(200).json(response);
   } catch (error: any) {
     console.log('error', error);
