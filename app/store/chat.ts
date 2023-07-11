@@ -338,7 +338,7 @@ export const useChatStore = create<ChatStore>()(
             },
           });
         };
-        if (!content.startsWith("您好")) {
+        if (!sessionStorage.getItem("pdfNameSpace")) {
           await noPdfFun();
           return;
         }
@@ -365,6 +365,7 @@ export const useChatStore = create<ChatStore>()(
                 question,
                 history,
                 ic,
+                pdfNameSpace: sessionStorage.getItem("pdfNameSpace"),
               }),
             });
             const data = await response.json();

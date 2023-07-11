@@ -1,10 +1,8 @@
 import { OpenAI } from 'langchain/llms/openai';
 import { PineconeStore } from 'langchain/vectorstores/pinecone';
 import { ConversationalRetrievalQAChain } from 'langchain/chains';
-import { PINECONE_NAME_SPACE } from './pinecone.config';
-
 // 通用品种
-const CONDENSE_PROMPT = `As an AI assistant,combine `+PINECONE_NAME_SPACE+` given the following conversation and a follow up question, rephrase the follow up question to be a standalone question with chinese.
+const CONDENSE_PROMPT=(res:any)=> `As an AI assistant,combine `+res+` given the following conversation and a follow up question, rephrase the follow up question to be a standalone question with chinese.
 
 Chat History:
 {chat_history}
@@ -47,10 +45,9 @@ Question: {question}
 Helpful answer in markdown with Chinese:`;
 }
 
-console.log('CONDENSE_PROMPT:',CONDENSE_PROMPT); 
 console.log('QA_PROMPT:',QA_PROMPT);
 
-export const makeChain = (vectorstore: PineconeStore) => {
+export const makeChain = (vectorstore: PineconeStore,pdfNameSpace?:String) => {
   const model = new OpenAI({
     temperature: 0, // increase temepreature to get more creative answers
     modelName: 'gpt-3.5-turbo-0613', //change this to gpt-4 if you have access
@@ -61,7 +58,7 @@ export const makeChain = (vectorstore: PineconeStore) => {
     vectorstore.asRetriever(3),
     {
       qaTemplate: QA_PROMPT,
-      questionGeneratorTemplate: CONDENSE_PROMPT,
+      questionGeneratorTemplate: CONDENSE_PROMPT(pdfNameSpace),
       returnSourceDocuments: false, //The number of source documents returned is 4 by default
     },
   );

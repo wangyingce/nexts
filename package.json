@@ -29,6 +29,7 @@
     "mysql2": "^3.4.2",
     "next": "^13.4.3",
     "node-fetch": "^3.3.1",
+    "notistack": "^3.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-markdown": "^8.0.7",
