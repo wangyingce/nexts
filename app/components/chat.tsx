@@ -783,13 +783,22 @@ export function Chat() {
     }
   };
   const getNameSpace = () => {
-    fetch("http://localhost:3333/nameSpace")
+    // console.log('accessStore.accessCode',accessStore.accessCode)
+    fetch("http://localhost:3333/nameSpace?code=" + accessStore.accessCode)
       .then((response) => response.json())
       .then((result: any) => {
         console.log(result);
         pdfListsSet(result.data);
       });
   };
+  function validateNamespace(namespace: string) {
+    const regex = /^[a-zA-Z0-9_]{1,64}$/;
+    if (regex.test(namespace)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   const [uploadin, uploadinSet] = useState<any>(false);
   const uploadPDF = (e: any) => {
     if (uploadin) {
@@ -797,10 +806,17 @@ export function Chat() {
       return;
     }
     const file: any = e.target.files[0];
+    // console.log(file)
     const formData: any = new FormData();
+    if (!validateNamespace(file.name.slice(0, file.name.lastIndexOf(".")))) {
+      enqueueSnackbar("文件名不符合规范,只能还有英文和数值", {
+        autoHideDuration: 4000,
+      });
+      return;
+    }
     formData.append("file", file);
+    formData.append("fileName", accessStore.accessCode + "_" + file.name);
     uploadinSet(true);
-    formData.append("fileName", file.name);
     fetch("http://localhost:3333/upload", {
       method: "POST",
       body: formData,
