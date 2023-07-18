@@ -495,7 +495,7 @@ export function ChatActions(props: {
                 enqueueSnackbar(
                   e.target.value
                     ? `对话将围绕PDF进行回复，PDF：${e.target.value}`
-                    : "后续对话回复为日常对话模式",
+                    : "后续对话恢复为日常对话模式",
                   { autoHideDuration: 4000 },
                 );
               }}
@@ -783,8 +783,9 @@ export function Chat() {
     }
   };
   const getNameSpace = () => {
-    // console.log('accessStore.accessCode',accessStore.accessCode)
-    fetch("http://localhost:3333/nameSpace?code=" + accessStore.accessCode)
+    fetch(
+      `https://talk-to-joker-nodejs.vercel.app/api/indexNameSpace?code=${accessStore.accessCode}`,
+    )
       .then((response) => response.json())
       .then((result: any) => {
         console.log(result);
@@ -815,12 +816,16 @@ export function Chat() {
       return;
     }
     formData.append("file", file);
-    formData.append("fileName", accessStore.accessCode + "_" + file.name);
     uploadinSet(true);
-    fetch("http://localhost:3333/upload", {
-      method: "POST",
-      body: formData,
-    })
+    fetch(
+      `https://talk-to-joker-nodejs.vercel.app/api/nextPdf?fileName=${
+        accessStore.accessCode + "_" + file.name
+      }`,
+      {
+        method: "POST",
+        body: formData,
+      },
+    )
       .then((response) => response.json())
       .then((result: any) => {
         uploadinSet(false);
@@ -829,7 +834,8 @@ export function Chat() {
 
         getNameSpace();
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log("err", err);
         uploadinSet(false);
       });
   };
