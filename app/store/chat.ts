@@ -12,6 +12,11 @@ import { api, RequestMessage } from "../client/api";
 import { ChatControllerPool } from "../client/controller";
 import { prettyObject } from "../utils/format";
 import { estimateTokenLength } from "../utils/token";
+import { makeChain } from "@/utils/makechain";
+import { PineconeStore } from "langchain/vectorstores/pinecone";
+import { OpenAIEmbeddings } from "langchain/embeddings/openai";
+import { pinecone } from "@/utils/pinecone-client";
+import { PINECONE_INDEX_NAME } from "@/utils/pinecone.config";
 
 export type ChatMessage = RequestMessage & {
   date: string;
@@ -278,60 +283,124 @@ export const useChatStore = create<ChatStore>()(
         });
 
         // make request
-        console.log("[User Input] ", sendMessages);
-        api.llm.chat({
-          messages: sendMessages,
-          config: { ...modelConfig, stream: true },
-          onUpdate(message) {
-            botMessage.streaming = true;
-            if (message) {
-              botMessage.content = message;
-            }
-            get().updateCurrentSession((session) => {
-              session.messages = session.messages.concat();
-            });
-          },
-          onFinish(message) {
-            botMessage.streaming = false;
-            if (message) {
-              botMessage.content = message;
-              get().onNewMessage(botMessage);
-            }
-            ChatControllerPool.remove(
-              sessionIndex,
-              botMessage.id ?? messageIndex,
-            );
-          },
-          onError(error) {
-            const isAborted = error.message.includes("aborted");
-            botMessage.content =
-              "\n\n" +
-              prettyObject({
-                error: true,
-                message: error.message,
+        const noPdfFun: any = async () => {
+          api.llm.chat({
+            messages: sendMessages,
+            config: { ...modelConfig, stream: true },
+            onUpdate(message) {
+              botMessage.streaming = true;
+              if (message) {
+                botMessage.content = message;
+              }
+              get().updateCurrentSession((session) => {
+                session.messages = session.messages.concat();
               });
-            botMessage.streaming = false;
-            userMessage.isError = !isAborted;
-            botMessage.isError = !isAborted;
-            get().updateCurrentSession((session) => {
-              session.messages = session.messages.concat();
-            });
-            ChatControllerPool.remove(
-              sessionIndex,
-              botMessage.id ?? messageIndex,
-            );
+            },
+            onFinish(message) {
+              botMessage.streaming = false;
+              if (message) {
+                botMessage.content = message;
+                get().onNewMessage(botMessage);
+              }
+              ChatControllerPool.remove(
+                sessionIndex,
+                botMessage.id ?? messageIndex,
+              );
+            },
+            onError(error) {
+              const isAborted = error.message.includes("aborted");
+              botMessage.content =
+                "\n\n" +
+                prettyObject({
+                  error: true,
+                  message: error.message,
+                });
+              botMessage.streaming = false;
+              userMessage.isError = !isAborted;
+              botMessage.isError = !isAborted;
+              get().updateCurrentSession((session) => {
+                session.messages = session.messages.concat();
+              });
+              ChatControllerPool.remove(
+                sessionIndex,
+                botMessage.id ?? messageIndex,
+              );
 
-            console.error("[Chat] failed ", error);
-          },
-          onController(controller) {
-            // collect controller for stop/retry
-            ChatControllerPool.addController(
-              sessionIndex,
-              botMessage.id ?? messageIndex,
-              controller,
-            );
-          },
-        });
+              console.error("[Chat] failed ", error);
+            },
+            onController(controller) {
+              // collect controller for stop/retry
+              ChatControllerPool.addController(
+                sessionIndex,
+                botMessage.id ?? messageIndex,
+                controller,
+              );
+            },
+          });
+        };
+        if (!sessionStorage.getItem("pdfNameSpace")) {
+          await noPdfFun();
+          return;
+        }
+        const urlParams = new URLSearchParams(window.location.search);
+        let ic = urlParams.get("ic");
+        let question: any = content;
+        let pdfHistory: any = JSON.parse(
+          localStorage.getItem("pdfHistory") || "[]",
+        );
+        if (pdfHistory.length > 7) {
+          pdfHistory = pdfHistory.slice(-7);
+        }
+        let history: any = pdfHistory;
+        ic = "wangyingce";
+
+        try {
+          setTimeout(async () => {
+            const response: any = await fetch("/api/chat", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                question,
+                history,
+                ic,
+                pdfNameSpace: sessionStorage.getItem("pdfNameSpace"),
+              }),
+            });
+            const data = await response.json();
+            if (data.error) {
+              botMessage.streaming = false;
+              botMessage.content = data.error;
+              get().onNewMessage(botMessage);
+              ChatControllerPool.remove(
+                sessionIndex,
+                botMessage.id ?? messageIndex,
+              );
+              pdfHistory.push([question, data.error]);
+              localStorage.setItem("pdfHistory", JSON.stringify(pdfHistory));
+            } else {
+              /*  */
+              botMessage.streaming = false;
+              botMessage.content = data.text;
+              get().onNewMessage(botMessage);
+              ChatControllerPool.remove(
+                sessionIndex,
+                botMessage.id ?? messageIndex,
+              );
+              pdfHistory.push([question, data.text]);
+              if (pdfHistory.length > 7) {
+                pdfHistory = pdfHistory.slice(-7);
+              }
+              localStorage.setItem("pdfHistory", JSON.stringify(pdfHistory));
+            }
+            console.log("messageState");
+          }, 0);
+
+          //scroll to bottom
+        } catch (error) {
+          console.log("error34234523423", error);
+        }
       },
 
       getMemoryPrompt() {
