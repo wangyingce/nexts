@@ -813,7 +813,6 @@ export function Chat() {
       enqueueSnackbar("文件大小不能超过 4兆", { autoHideDuration: 3000 });
       return;
     }
-    return;
     const formData: any = new FormData();
     if (!validateNamespace(file.name.slice(0, file.name.lastIndexOf(".")))) {
       enqueueSnackbar("文件名不符合规范,只能还有英文和数值", {
