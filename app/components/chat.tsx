@@ -807,7 +807,13 @@ export function Chat() {
       return;
     }
     const file: any = e.target.files[0];
-    // console.log(file)
+    console.log(file);
+    // 限制上传三兆
+    if (file.size > 1024 * 4 * 1000) {
+      enqueueSnackbar("文件大小不能超过 4兆", { autoHideDuration: 3000 });
+      return;
+    }
+    return;
     const formData: any = new FormData();
     if (!validateNamespace(file.name.slice(0, file.name.lastIndexOf(".")))) {
       enqueueSnackbar("文件名不符合规范,只能还有英文和数值", {
