@@ -30,7 +30,7 @@ import DarkIcon from "../icons/dark.svg";
 import AutoIcon from "../icons/auto.svg";
 import BottomIcon from "../icons/bottom.svg";
 import StopIcon from "../icons/pause.svg";
-
+import "./chat.scss";
 import {
   ChatMessage,
   SubmitKey,
@@ -393,6 +393,8 @@ export function ChatActions(props: {
   showPromptHints: () => void;
   hitBottom: boolean;
   pdfLists: any;
+  uploadin?: any;
+  uploadPDF?: any;
 }) {
   const { pdfLists } = props;
   const config = useAppConfig();
@@ -415,78 +417,109 @@ export function ChatActions(props: {
 
   const [pdfNameSpace, pdfNameSpaceSet] = useState<any>("");
   return (
-    <div className={chatStyle["chat-input-actions"]}>
-      {couldStop && (
+    <>
+      <div className={chatStyle["chat-input-actions"]}>
+        {couldStop && (
+          <ChatAction
+            onClick={stopAll}
+            text={Locale.Chat.InputActions.Stop}
+            icon={<StopIcon />}
+          />
+        )}
+        {!props.hitBottom && (
+          <ChatAction
+            onClick={props.scrollToBottom}
+            text={Locale.Chat.InputActions.ToBottom}
+            icon={<BottomIcon />}
+          />
+        )}
+        {props.hitBottom && (
+          <ChatAction
+            onClick={props.showPromptModal}
+            text={Locale.Chat.InputActions.Settings}
+            icon={<SettingsIcon />}
+          />
+        )}
+
         <ChatAction
-          onClick={stopAll}
-          text={Locale.Chat.InputActions.Stop}
-          icon={<StopIcon />}
+          onClick={nextTheme}
+          text={Locale.Chat.InputActions.Theme[theme]}
+          icon={
+            <>
+              {theme === Theme.Auto ? (
+                <AutoIcon />
+              ) : theme === Theme.Light ? (
+                <LightIcon />
+              ) : theme === Theme.Dark ? (
+                <DarkIcon />
+              ) : null}
+            </>
+          }
         />
-      )}
-      {!props.hitBottom && (
+
         <ChatAction
-          onClick={props.scrollToBottom}
-          text={Locale.Chat.InputActions.ToBottom}
-          icon={<BottomIcon />}
+          onClick={props.showPromptHints}
+          text={Locale.Chat.InputActions.Prompt}
+          icon={<PromptIcon />}
         />
-      )}
-      {props.hitBottom && (
+
         <ChatAction
-          onClick={props.showPromptModal}
-          text={Locale.Chat.InputActions.Settings}
-          icon={<SettingsIcon />}
+          onClick={() => {
+            navigate(Path.Masks);
+          }}
+          text={Locale.Chat.InputActions.Masks}
+          icon={<MaskIcon />}
         />
-      )}
 
-      <ChatAction
-        onClick={nextTheme}
-        text={Locale.Chat.InputActions.Theme[theme]}
-        icon={
-          <>
-            {theme === Theme.Auto ? (
-              <AutoIcon />
-            ) : theme === Theme.Light ? (
-              <LightIcon />
-            ) : theme === Theme.Dark ? (
-              <DarkIcon />
-            ) : null}
-          </>
-        }
-      />
+        <ChatAction
+          text={Locale.Chat.InputActions.Clear}
+          icon={<BreakIcon />}
+          onClick={() => {
+            chatStore.updateCurrentSession((session) => {
+              if (session.clearContextIndex === session.messages.length) {
+                session.clearContextIndex = undefined;
+              } else {
+                session.clearContextIndex = session.messages.length;
+                session.memoryPrompt = ""; // will clear memory
+              }
+            });
+          }}
+        />
+      </div>
+      <div className="pdfBox">
+        <div
+          className="window-action-button uploadPDF"
+          title={Locale.Home.upload}
+        >
+          {props.uploadin ? (
+            <IconButton
+              className="anLoading"
+              text="上传中"
+              icon={<AnLoading />}
+              bordered
+            />
+          ) : (
+            <IconButton icon={<Upload />} text="上传PDF" bordered />
+          )}
 
-      <ChatAction
-        onClick={props.showPromptHints}
-        text={Locale.Chat.InputActions.Prompt}
-        icon={<PromptIcon />}
-      />
-
-      <ChatAction
-        onClick={() => {
-          navigate(Path.Masks);
-        }}
-        text={Locale.Chat.InputActions.Masks}
-        icon={<MaskIcon />}
-      />
-
-      <ChatAction
-        text={Locale.Chat.InputActions.Clear}
-        icon={<BreakIcon />}
-        onClick={() => {
-          chatStore.updateCurrentSession((session) => {
-            if (session.clearContextIndex === session.messages.length) {
-              session.clearContextIndex = undefined;
-            } else {
-              session.clearContextIndex = session.messages.length;
-              session.memoryPrompt = ""; // will clear memory
-            }
-          });
-        }}
-      />
-      <ChatAction
-        pdfNameSpace={pdfNameSpace}
-        el={
+          {/* 只允许上传pdf */}
+          <input
+            id="uploadPDFinputEl"
+            type="file"
+            disabled={props.uploadin}
+            accept=".pdf"
+            onChange={props.uploadPDF}
+          ></input>
+        </div>
+        <div className="pdfListBox">
+          <ChatAction
+            pdfNameSpace={pdfNameSpace}
+            icon={<AnPdf />}
+            onClick={(e: any) => {}}
+          />
           <div>
             <select
+              id="pdfSelect"
               title={pdfNameSpace}
               onChange={(e: any) => {
                 console.log(e.target.value);
@@ -500,7 +533,7 @@ export function ChatActions(props: {
                 );
               }}
             >
-              <option value="">{Locale.Home.clear}</option>
+              <option value="">请选择</option>
               {pdfLists.map((item: any) => {
                 return (
                   <option title={item} key={item} value={item}>
@@ -510,11 +543,9 @@ export function ChatActions(props: {
               })}
             </select>
           </div>
-        }
-        icon={<AnPdf />}
-        onClick={(e: any) => {}}
-      />
-    </div>
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -801,9 +832,14 @@ export function Chat() {
     }
   }
   const [uploadin, uploadinSet] = useState<any>(false);
+  const clearPDFInput = () => {
+    const inputEl: any = document.getElementById("uploadPDFinputEl");
+    inputEl.value = "";
+  };
   const uploadPDF = (e: any) => {
     if (uploadin) {
       enqueueSnackbar("文件上传中。。。请勿稍等", { autoHideDuration: 3000 });
+      clearPDFInput();
       return;
     }
     const file: any = e.target.files[0];
@@ -811,13 +847,15 @@ export function Chat() {
     // 限制上传三兆
     if (file.size > 1024 * 4 * 1000) {
       enqueueSnackbar("文件大小不能超过 4兆", { autoHideDuration: 3000 });
+      clearPDFInput();
       return;
     }
     const formData: any = new FormData();
     if (!validateNamespace(file.name.slice(0, file.name.lastIndexOf(".")))) {
-      enqueueSnackbar("文件名不符合规范,只能还有英文和数值", {
+      enqueueSnackbar("文件名不符合规范,只能含有英文和数字", {
         autoHideDuration: 4000,
       });
+      clearPDFInput();
       return;
     }
     formData.append("file", file);
@@ -833,6 +871,7 @@ export function Chat() {
     )
       .then((response) => response.json())
       .then((result: any) => {
+        clearPDFInput();
         uploadinSet(false);
         console.log(result);
         enqueueSnackbar("文件上传成功", { autoHideDuration: 4000 });
@@ -840,6 +879,7 @@ export function Chat() {
         getNameSpace();
       })
       .catch((err) => {
+        clearPDFInput();
         console.log("err", err);
         uploadinSet(false);
       });
@@ -883,28 +923,6 @@ export function Chat() {
                 title={Locale.Chat.Actions.ChatList}
                 onClick={() => navigate(Path.Home)}
               />
-            </div>
-            <div
-              className="window-action-button uploadPDF"
-              title={Locale.Home.upload}
-            >
-              {uploadin ? (
-                <IconButton
-                  className="anLoading"
-                  icon={<AnLoading />}
-                  bordered
-                />
-              ) : (
-                <IconButton icon={<Upload />} bordered />
-              )}
-
-              {/* 只允许上传pdf */}
-              <input
-                type="file"
-                disabled={uploadin}
-                accept=".pdf"
-                onChange={uploadPDF}
-              ></input>
             </div>
             <div className="window-action-button">
               <IconButton
@@ -1059,6 +1077,8 @@ export function Chat() {
           <PromptHints prompts={promptHints} onPromptSelect={onPromptSelect} />
 
           <ChatActions
+            uploadPDF={uploadPDF}
+            uploadin={uploadin}
             pdfLists={pdfLists}
             showPromptModal={() => setShowPromptModal(true)}
             scrollToBottom={scrollToBottom}
