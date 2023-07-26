@@ -90,6 +90,8 @@ const cn = {
     ResetConfirm: "确认清空历史摘要？",
   },
   Home: {
+    clear: "清空",
+    upload: "上传",
     KeFu: "客服",
     NewChat: "新的聊天",
     DeleteChat: "确认删除选中的对话？",

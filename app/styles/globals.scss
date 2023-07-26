@@ -353,3 +353,17 @@ pre {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+@keyframes anloadingKey {
+  // 旋转
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.anLoading{
+  svg{
+    animation: anloadingKey 1s infinite;
+  }
+}
