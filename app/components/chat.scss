@@ -1,0 +1,48 @@
+.pdfBox{
+  padding:0 0 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content:space-between;
+  .pdfListBox{
+    display: flex;
+    align-items: center;
+    border: 1px solid rgb(222, 222, 222);
+    position: relative;
+    width:230px;
+    height:38px;
+    border-radius: 10px;
+    overflow: hidden;
+    select{
+      width: 180px;
+      border: none;
+      position: absolute;
+      left:0;
+      top: 0;
+      right: 0;
+      height: 38px;
+      padding: 0;
+      outline: none;
+      border-radius: 0;
+      width:100%;
+      padding-left: 30px;
+      padding-right: 10px;
+    }
+    &>div:first-child{
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 20px;
+      height: 20px;
+      z-index: 200;
+      padding:8px;
+      pointer-events: none;
+    }
+  }
+  .uploadPDF{
+    margin-left: 0;
+    margin-right: 10px;
+    button{
+      padding:10px;
+    }
+  }
+}
