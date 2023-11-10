@@ -99,6 +99,10 @@ export const ALL_MODELS = [
     available: true,
   },
   {
+    name: "gpt-4-1106-preview",
+    available: true,
+  },
+  {
     name: "qwen-v1", // 通义千问
     available: false,
   },
