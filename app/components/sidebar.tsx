@@ -124,7 +124,7 @@ export function SideBar(props: { className?: string }) {
           AI Markets
         </div>
         <div className={styles["sidebar-sub-title"]}>
-          Your personal AI platform.
+          新增gpt-4模型可供使用～
         </div>
         <div className={styles["sidebar-logo"] + " no-dark"}>
           <ChatGptIcon />
