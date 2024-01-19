@@ -56,74 +56,92 @@ const ENABLE_GPT4 = true;
 export const ALL_MODELS = [
   {
     name: "gpt-4",
+    value: "gpt-4-1106-preview",
     available: ENABLE_GPT4,
   },
   {
     name: "gpt-4-0314",
+    value: "gpt-4-1106-preview",
     available: ENABLE_GPT4,
   },
   {
     name: "gpt-4-0613",
+    value: "gpt-4-1106-preview",
     available: ENABLE_GPT4,
   },
   {
     name: "gpt-4-32k",
+    value: "gpt-4-1106-preview",
     available: ENABLE_GPT4,
   },
   {
     name: "gpt-4-32k-0314",
+    value: "gpt-4-1106-preview",
     available: ENABLE_GPT4,
   },
   {
     name: "gpt-4-32k-0613",
+    value: "gpt-4-1106-preview",
     available: ENABLE_GPT4,
   },
   {
     name: "gpt-3.5-turbo",
+    value: "gpt-3.5-turbo",
     available: true,
   },
   {
     name: "gpt-3.5-turbo-0301",
+    value: "gpt-3.5-turbo-0301",
     available: true,
   },
   {
     name: "gpt-3.5-turbo-0613",
+    value: "gpt-3.5-turbo-0613",
     available: true,
   },
   {
     name: "gpt-3.5-turbo-16k",
+    value: "gpt-3.5-turbo-16k",
     available: true,
   },
   {
     name: "gpt-3.5-turbo-16k-0613",
+    value: "gpt-3.5-turbo-16k-0613",
     available: true,
   },
   {
     name: "gpt-3.5-turbo-1106",
+    value: "gpt-3.5-turbo-1106",
     available: true,
   },
   {
-    name: "gpt-4-1106-preview",
+    name: "gpt-4-turbo",
+    value: "gpt-4-1106-preview",
     available: true,
   },
   {
     name: "qwen-v1", // 通义千问
+    value: "qwen-v1",
     available: false,
   },
   {
     name: "ernie", // 文心一言
+    value: "ernie",
     available: false,
   },
   {
     name: "spark", // 讯飞星火
+    value: "spark",
     available: false,
   },
   {
     name: "llama", // llama
+    value: "llama",
     available: false,
   },
   {
     name: "chatglm", // chatglm-6b
+    value: "chatglm",
     available: false,
   },
 ] as const;
