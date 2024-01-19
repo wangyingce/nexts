@@ -74,13 +74,13 @@ export const useAccessStore = create<AccessControlStore>()(
             console.log("[Config] got config from server", res);
             set(() => ({ ...res }));
 
-            // if (!res.enableGPT4) {
-            //   ALL_MODELS.forEach((model) => {
-            //     if (model.name.startsWith("gpt-4")) {
-            //       (model as any).available = false;
-            //     }
-            //   });
-            // }
+            if (!res.enableGPT4) {
+              ALL_MODELS.forEach((model) => {
+                if (model.name.startsWith("gpt-4")) {
+                  (model as any).available = false;
+                }
+              });
+            }
 
             if ((res as any).botHello) {
               BOT_HELLO.content = (res as any).botHello;
