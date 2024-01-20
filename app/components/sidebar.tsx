@@ -124,7 +124,7 @@ export function SideBar(props: { className?: string }) {
           AI Markets
         </div>
         <div className={styles["sidebar-sub-title"]}>
-          新增gpt-4模型可供使用～
+          集成精简，提供经典的gpt-3.5-turbo和gpt-4-turbo和多种提示词组合使用
         </div>
         <div className={styles["sidebar-logo"] + " no-dark"}>
           <ChatGptIcon />
