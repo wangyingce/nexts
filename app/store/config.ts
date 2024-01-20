@@ -55,70 +55,70 @@ const ENABLE_GPT4 = true;
 
 export const ALL_MODELS = [
   {
-    name: "gpt-4",
+    name: "gpt-4-turbo",
     value: "gpt-4-1106-preview",
     available: ENABLE_GPT4,
   },
-  {
-    name: "gpt-4-0314",
-    value: "gpt-4-1106-preview",
-    available: ENABLE_GPT4,
-  },
-  {
-    name: "gpt-4-0613",
-    value: "gpt-4-1106-preview",
-    available: ENABLE_GPT4,
-  },
-  {
-    name: "gpt-4-32k",
-    value: "gpt-4-1106-preview",
-    available: ENABLE_GPT4,
-  },
-  {
-    name: "gpt-4-32k-0314",
-    value: "gpt-4-1106-preview",
-    available: ENABLE_GPT4,
-  },
-  {
-    name: "gpt-4-32k-0613",
-    value: "gpt-4-1106-preview",
-    available: ENABLE_GPT4,
-  },
+  // {
+  //   name: "gpt-4-0314",
+  //   value: "gpt-4-1106-preview",
+  //   available: ENABLE_GPT4,
+  // },
+  // {
+  //   name: "gpt-4-0613",
+  //   value: "gpt-4-1106-preview",
+  //   available: ENABLE_GPT4,
+  // },
+  // {
+  //   name: "gpt-4-32k",
+  //   value: "gpt-4-1106-preview",
+  //   available: ENABLE_GPT4,
+  // },
+  // {
+  //   name: "gpt-4-32k-0314",
+  //   value: "gpt-4-1106-preview",
+  //   available: ENABLE_GPT4,
+  // },
+  // {
+  //   name: "gpt-4-32k-0613",
+  //   value: "gpt-4-1106-preview",
+  //   available: ENABLE_GPT4,
+  // },
   {
     name: "gpt-3.5-turbo",
     value: "gpt-3.5-turbo",
     available: true,
   },
-  {
-    name: "gpt-3.5-turbo-0301",
-    value: "gpt-3.5-turbo-0301",
-    available: true,
-  },
-  {
-    name: "gpt-3.5-turbo-0613",
-    value: "gpt-3.5-turbo-0613",
-    available: true,
-  },
-  {
-    name: "gpt-3.5-turbo-16k",
-    value: "gpt-3.5-turbo-16k",
-    available: true,
-  },
-  {
-    name: "gpt-3.5-turbo-16k-0613",
-    value: "gpt-3.5-turbo-16k-0613",
-    available: true,
-  },
-  {
-    name: "gpt-3.5-turbo-1106",
-    value: "gpt-3.5-turbo-1106",
-    available: true,
-  },
-  {
-    name: "gpt-4-turbo",
-    value: "gpt-4-1106-preview",
-    available: true,
-  },
+  // {
+  //   name: "gpt-3.5-turbo-0301",
+  //   value: "gpt-3.5-turbo-0301",
+  //   available: true,
+  // },
+  // {
+  //   name: "gpt-3.5-turbo-0613",
+  //   value: "gpt-3.5-turbo-0613",
+  //   available: true,
+  // },
+  // {
+  //   name: "gpt-3.5-turbo-16k",
+  //   value: "gpt-3.5-turbo-16k",
+  //   available: true,
+  // },
+  // {
+  //   name: "gpt-3.5-turbo-16k-0613",
+  //   value: "gpt-3.5-turbo-16k-0613",
+  //   available: true,
+  // },
+  // {
+  //   name: "gpt-3.5-turbo-1106",
+  //   value: "gpt-3.5-turbo-1106",
+  //   available: true,
+  // },
+  // {
+  //   name: "gpt-4-turbo",
+  //   value: "gpt-4-1106-preview",
+  //   available: true,
+  // },
   {
     name: "qwen-v1", // 通义千问
     value: "qwen-v1",
@@ -162,13 +162,14 @@ export function limitNumber(
 }
 
 export function limitModel(name: string) {
-  return ALL_MODELS.some((m) => m.name === name && m.available)
+  return ALL_MODELS.some((m) => m.value === name && m.available)
     ? name
     : "gpt-3.5-turbo";
 }
 
 export const ModalConfigValidator = {
   model(x: string) {
+    // alert("limitModel(x) as ModelType="+limitModel(x) as ModelType);
     return limitModel(x) as ModelType;
   },
   max_tokens(x: number) {

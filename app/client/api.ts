@@ -6,7 +6,7 @@ import { ChatGPTApi } from "./platforms/openai";
 export const ROLES = ["system", "user", "assistant"] as const;
 export type MessageRole = (typeof ROLES)[number];
 
-export const Models = ["gpt-3.5-turbo", "gpt-4"] as const;
+export const Models = ["gpt-3.5-turbo", "gpt-4-turbo"] as const;
 export type ChatModel = ModelType;
 
 export interface RequestMessage {
@@ -86,8 +86,7 @@ export class ClientApi {
       .concat([
         {
           from: "human",
-          value:
-            "Share from: https://github.com/Yidadaa/ChatGPT-Next-Web",
+          value: "Share from: https://github.com/Yidadaa/ChatGPT-Next-Web",
         },
       ]);
     // 敬告二开开发者们，为了开源大模型的发展，请不要修改上述消息，此消息用于后续数据清洗使用
