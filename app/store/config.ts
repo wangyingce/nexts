@@ -55,8 +55,8 @@ const ENABLE_GPT4 = true;
 
 export const ALL_MODELS = [
   {
-    name: "gpt-4-turbo",
-    value: "gpt-4-1106-preview",
+    name: "gpt-4-turbo-preview",
+    value: "gpt-4-turbo-preview",
     available: ENABLE_GPT4,
   },
   // {
