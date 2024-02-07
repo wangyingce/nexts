@@ -5,7 +5,7 @@ const cs: PartialLocaleType = {
   WIP: "V přípravě...",
   Error: {
     Unauthorized:
-      "Neoprávněný přístup, zadejte přístupový kód na stránce nastavení.",
+      "Neoprávněný přístup, zadejte přístupový kód na [stránce](/#/auth) nastavení.",
   },
   ChatItem: {
     ChatItemCount: (count: number) => `${count} zpráv`,
@@ -53,7 +53,6 @@ const cs: PartialLocaleType = {
       "Resetováním se vymaže historie aktuálních konverzací i paměť historie pokynů. Opravdu chcete provést obnovu?",
   },
   Home: {
-    KeFu: "Dịch vụ",
     NewChat: "Nový chat",
     DeleteChat: "Potvrzujete smazání vybrané konverzace?",
     DeleteToast: "Chat smazán",
@@ -62,13 +61,7 @@ const cs: PartialLocaleType = {
   Settings: {
     Title: "Nastavení",
     SubTitle: "Všechna nastavení",
-    Actions: {
-      ClearAll: "Vymazat všechna data",
-      ResetAll: "Obnovit veškeré nastavení",
-      Close: "Zavřít",
-      ConfirmResetAll: "Jste si jisti, že chcete obnovit všechna nastavení?",
-      ConfirmClearAll: "Jste si jisti, že chcete smazat všechna data?",
-    },
+
     Lang: {
       Name: "Language", // ATTENTION: if you wanna add a new translation, please do not translate this value, leave it as `Language`
       All: "Všechny jazyky",
@@ -77,6 +70,11 @@ const cs: PartialLocaleType = {
     FontSize: {
       Title: "Velikost písma",
       SubTitle: "Nastavení velikosti písma obsahu chatu",
+    },
+    InjectSystemPrompts: {
+      Title: "Vložit systémové prompty",
+      SubTitle:
+        "Vynutit přidání simulovaného systémového promptu ChatGPT na začátek seznamu zpráv každého požadavku",
     },
     Update: {
       Version: (x: string) => `Verze: ${x}`,
@@ -94,8 +92,10 @@ const cs: PartialLocaleType = {
       SubTitle: "Zobrazit v náhledu bubliny",
     },
     Mask: {
-      Title: "Úvodní obrazovka Masek",
-      SubTitle: "Před zahájením nového chatu zobrazte úvodní obrazovku Masek",
+      Splash: {
+        Title: "Úvodní obrazovka Masek",
+        SubTitle: "Před zahájením nového chatu zobrazte úvodní obrazovku Masek",
+      },
     },
     Prompt: {
       Disable: {
@@ -124,11 +124,7 @@ const cs: PartialLocaleType = {
       SubTitle:
         "Komprese proběhne, pokud délka nekomprimovaných zpráv přesáhne tuto hodnotu",
     },
-    Token: {
-      Title: "API klíč",
-      SubTitle: "Použitím klíče ignorujete omezení přístupového kódu",
-      Placeholder: "Klíč API OpenAI",
-    },
+
     Usage: {
       Title: "Stav účtu",
       SubTitle(used: any, total: any) {
@@ -138,11 +134,7 @@ const cs: PartialLocaleType = {
       Check: "Zkontrolovat",
       NoAccess: "Pro kontrolu zůstatku zadejte klíč API",
     },
-    AccessCode: {
-      Title: "Přístupový kód",
-      SubTitle: "Kontrola přístupu povolena",
-      Placeholder: "Potřebujete přístupový kód",
-    },
+
     Model: "Model",
     Temperature: {
       Title: "Teplota",
@@ -188,6 +180,9 @@ const cs: PartialLocaleType = {
   Plugin: {
     Name: "Plugin",
   },
+  FineTuned: {
+    Sysmessage: "Jste asistent, který",
+  },
   Mask: {
     Name: "Maska",
     Page: {
@@ -231,6 +226,12 @@ const cs: PartialLocaleType = {
     Close: "Zavřít",
     Create: "Vytvořit",
     Edit: "Upravit",
+  },
+  Exporter: {
+    Model: "Model",
+    Messages: "Zprávy",
+    Topic: "Téma",
+    Time: "Čas",
   },
 };
 

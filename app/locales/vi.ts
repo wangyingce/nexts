@@ -53,8 +53,7 @@ const vi: PartialLocaleType = {
       "Đặt lại sẽ xóa toàn bộ lịch sử trò chuyện hiện tại và bộ nhớ. Bạn có chắc chắn muốn đặt lại không?",
   },
   Home: {
-    KeFu: "Dịch vụ",
-    NewChat: "Đối thoại mới",
+    NewChat: "Cuộc trò chuyện mới",
     DeleteChat: "Xác nhận xóa các cuộc trò chuyện đã chọn?",
     DeleteToast: "Đã xóa cuộc trò chuyện",
     Revert: "Khôi phục",
@@ -62,13 +61,7 @@ const vi: PartialLocaleType = {
   Settings: {
     Title: "Cài đặt",
     SubTitle: "Tất cả cài đặt",
-    Actions: {
-      ClearAll: "Xóa toàn bộ dữ liệu",
-      ResetAll: "Khôi phục cài đặt gốc",
-      Close: "Đóng",
-      ConfirmResetAll: "Bạn chắc chắn muốn thiết lập lại tất cả cài đặt?",
-      ConfirmClearAll: "Bạn chắc chắn muốn thiết lập lại tất cả dữ liệu?",
-    },
+
     Lang: {
       Name: "Language", // ATTENTION: if you wanna add a new translation, please do not translate this value, leave it as `Language`
       All: "Tất cả ngôn ngữ",
@@ -77,6 +70,11 @@ const vi: PartialLocaleType = {
     FontSize: {
       Title: "Font chữ",
       SubTitle: "Thay đổi font chữ của nội dung trò chuyện",
+    },
+    InjectSystemPrompts: {
+      Title: "Tiêm Prompt Hệ thống",
+      SubTitle:
+        "Bắt buộc thêm một prompt hệ thống giả lập ChatGPT ở đầu danh sách tin nhắn cho mỗi yêu cầu",
     },
     Update: {
       Version: (x: string) => `Phiên bản: ${x}`,
@@ -94,8 +92,10 @@ const vi: PartialLocaleType = {
       SubTitle: "Xem trước nội dung markdown bằng bong bóng",
     },
     Mask: {
-      Title: "Mask Splash Screen",
-      SubTitle: "Chớp màn hình khi bắt đầu cuộc trò chuyện mới",
+      Splash: {
+        Title: "Mask Splash Screen",
+        SubTitle: "Chớp màn hình khi bắt đầu cuộc trò chuyện mới",
+      },
     },
     Prompt: {
       Disable: {
@@ -123,11 +123,7 @@ const vi: PartialLocaleType = {
       Title: "Ngưỡng nén lịch sử tin nhắn",
       SubTitle: "Thực hiện nén nếu số lượng tin nhắn chưa nén vượt quá ngưỡng",
     },
-    Token: {
-      Title: "API Key",
-      SubTitle: "Sử dụng khóa của bạn để bỏ qua giới hạn mã truy cập",
-      Placeholder: "OpenAI API Key",
-    },
+
     Usage: {
       Title: "Hạn mức tài khoản",
       SubTitle(used: any, total: any) {
@@ -137,11 +133,7 @@ const vi: PartialLocaleType = {
       Check: "Kiểm tra",
       NoAccess: "Nhập API Key để kiểm tra hạn mức",
     },
-    AccessCode: {
-      Title: "Mã truy cập",
-      SubTitle: "Đã bật kiểm soát truy cập",
-      Placeholder: "Nhập mã truy cập",
-    },
+
     Model: "Mô hình",
     Temperature: {
       Title: "Tính ngẫu nhiên (temperature)",
@@ -186,6 +178,9 @@ const vi: PartialLocaleType = {
   Plugin: {
     Name: "Plugin",
   },
+  FineTuned: {
+    Sysmessage: "Bạn là một trợ lý",
+  },
   Mask: {
     Name: "Mẫu",
     Page: {
@@ -229,6 +224,12 @@ const vi: PartialLocaleType = {
     Close: "Đóng",
     Create: "Tạo",
     Edit: "Chỉnh sửa",
+  },
+  Exporter: {
+    Model: "Mô hình",
+    Messages: "Thông điệp",
+    Topic: "Chủ đề",
+    Time: "Thời gian",
   },
 };
 

@@ -8,15 +8,8 @@
   --white: white;
   --black: rgb(48, 48, 48);
   --gray: rgb(250, 250, 250);
-  --primary: rgb(48, 48, 48);
-  //  --second: rgb(187, 187, 187);
-  //  --second: rgb(199, 232, 250);
-  // --second: rgb(0, 146, 182);
-  //天青-wiki
-  //--second: rgb(141, 212, 232);
-  //天青-瓷器
-   --second: rgb(195, 224, 231);
-
+  --primary: rgb(29, 147, 171);
+  --second: rgb(231, 248, 255);
   --hover-color: #f3f3f3;
   --bar-color: rgba(0, 0, 0, 0.1);
   --theme-color: var(--gray);
@@ -36,7 +29,7 @@
   --white: rgb(30, 30, 30);
   --black: rgb(187, 187, 187);
   --gray: rgb(21, 21, 21);
-  --primary: rgb(48, 48, 48);
+  --primary: rgb(29, 147, 171);
   --second: rgb(27 38 42);
   --hover-color: #323232;
 
@@ -96,7 +89,7 @@
 html {
   height: var(--full-height);
 
-  font-family: "Noto Sans SC", "SF Pro SC", "SF Pro Text", "SF Pro Icons",
+  font-family: "Noto Sans", "SF Pro SC", "SF Pro Text", "SF Pro Icons",
     "PingFang SC", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 }
 
@@ -112,6 +105,7 @@ body {
   align-items: center;
   user-select: none;
   touch-action: pan-x pan-y;
+  overflow: hidden;
 
   @media only screen and (max-width: 600px) {
     background-color: var(--second);
@@ -311,6 +305,9 @@ pre {
   &:hover {
     filter: brightness(0.9);
   }
+  &:focus {
+    filter: brightness(0.95);
+  }
 }
 
 .error {
@@ -352,11 +349,15 @@ pre {
   justify-content: center;
   border: var(--border-in-light);
   box-shadow: var(--card-shadow);
-  border-radius: 10px;
+  border-radius: 11px;
 }
 
 .one-line {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.copyable {
+  user-select: text;
 }

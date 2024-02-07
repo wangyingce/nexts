@@ -5,7 +5,7 @@ const tr: PartialLocaleType = {
   WIP: "Çalışma devam ediyor...",
   Error: {
     Unauthorized:
-      "Yetkisiz erişim, lütfen erişim kodunu ayarlar sayfasından giriniz.",
+      "Yetkisiz erişim, lütfen erişim kodunu ayarlar [sayfasından](/#/auth) giriniz.",
   },
   ChatItem: {
     ChatItemCount: (count: number) => `${count} mesaj`,
@@ -53,7 +53,6 @@ const tr: PartialLocaleType = {
       "Sıfırlama, geçerli görüşme geçmişini ve geçmiş belleği siler. Sıfırlamak istediğinizden emin misiniz?",
   },
   Home: {
-    KeFu: "Çağrı Merkezi",
     NewChat: "Yeni Sohbet",
     DeleteChat: "Seçili sohbeti silmeyi onaylıyor musunuz?",
     DeleteToast: "Sohbet Silindi",
@@ -62,13 +61,7 @@ const tr: PartialLocaleType = {
   Settings: {
     Title: "Ayarlar",
     SubTitle: "Tüm Ayarlar",
-    Actions: {
-      ClearAll: "Tüm Verileri Temizle",
-      ResetAll: "Tüm Ayarları Sıfırla",
-      Close: "Kapat",
-      ConfirmResetAll: "Tüm ayarları sıfırlamak istediğinizden emin misiniz?",
-      ConfirmClearAll: "Tüm sohbeti sıfırlamak istediğinizden emin misiniz?",
-    },
+
     Lang: {
       Name: "Language", // ATTENTION: if you wanna add a new translation, please do not translate this value, leave it as `Language`
       All: "Tüm Diller",
@@ -77,6 +70,11 @@ const tr: PartialLocaleType = {
     FontSize: {
       Title: "Yazı Boyutu",
       SubTitle: "Sohbet içeriğinin yazı boyutunu ayarlayın",
+    },
+    InjectSystemPrompts: {
+      Title: "Sistem İpucu Ekleyin",
+      SubTitle:
+        "Her istek için ileti listesinin başına simüle edilmiş bir ChatGPT sistem ipucu ekleyin",
     },
     Update: {
       Version: (x: string) => `Sürüm: ${x}`,
@@ -94,8 +92,10 @@ const tr: PartialLocaleType = {
       SubTitle: "Preview markdown in bubble",
     },
     Mask: {
-      Title: "Mask Splash Screen",
-      SubTitle: "Show a mask splash screen before starting new chat",
+      Splash: {
+        Title: "Mask Splash Screen",
+        SubTitle: "Show a mask splash screen before starting new chat",
+      },
     },
     Prompt: {
       Disable: {
@@ -124,11 +124,7 @@ const tr: PartialLocaleType = {
       SubTitle:
         "Sıkıştırılmamış mesajların uzunluğu bu değeri aşarsa sıkıştırılır",
     },
-    Token: {
-      Title: "API Anahtarı",
-      SubTitle: "Erişim kodu sınırını yoksaymak için anahtarınızı kullanın",
-      Placeholder: "OpenAI API Anahtarı",
-    },
+
     Usage: {
       Title: "Hesap Bakiyesi",
       SubTitle(used: any, total: any) {
@@ -138,11 +134,7 @@ const tr: PartialLocaleType = {
       Check: "Tekrar Kontrol Et",
       NoAccess: "Bakiyeyi kontrol etmek için API anahtarını girin",
     },
-    AccessCode: {
-      Title: "Erişim Kodu",
-      SubTitle: "Erişim kontrolü etkinleştirme",
-      Placeholder: "Erişim Kodu Gerekiyor",
-    },
+
     Model: "Model",
     Temperature: {
       Title: "Gerçeklik",
@@ -191,6 +183,9 @@ const tr: PartialLocaleType = {
   Plugin: {
     Name: "Plugin",
   },
+  FineTuned: {
+    Sysmessage: "Sen bir asistansın",
+  },
   Mask: {
     Name: "Mask",
     Page: {
@@ -234,6 +229,12 @@ const tr: PartialLocaleType = {
     Close: "Close",
     Create: "Create",
     Edit: "Edit",
+  },
+  Exporter: {
+    Model: "Model",
+    Messages: "Mesajlar",
+    Topic: "Konu",
+    Time: "Zaman",
   },
 };
 
