@@ -158,7 +158,7 @@ export function SideBar(props: { className?: string }) {
         AiMarkets
         </div>
         <div className={styles["sidebar-sub-title"]}>
-        customer service wx:newchat0619
+        客服微信号：newchat0619
         </div>
         <div className={styles["sidebar-logo"] + " no-dark"}>
           <ChatGptIcon />
