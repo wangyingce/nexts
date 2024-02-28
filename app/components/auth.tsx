@@ -52,8 +52,8 @@ export function AuthPage() {
       />
       {!accessStore.hideUserApiKey ? (
         <>
-          <div className={styles["auth-tips"]}>{Locale.Auth.SubTips}</div>
-          <input
+          <div hidden className={styles["auth-tips"]}>{Locale.Auth.SubTips}</div>
+          <input hidden 
             className={styles["auth-input"]}
             type="password"
             placeholder={Locale.Settings.Access.OpenAI.ApiKey.Placeholder}
@@ -64,7 +64,7 @@ export function AuthPage() {
               );
             }}
           />
-          <input
+          <input hidden 
             className={styles["auth-input"]}
             type="password"
             placeholder={Locale.Settings.Access.Google.ApiKey.Placeholder}
