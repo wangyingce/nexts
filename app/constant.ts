@@ -111,6 +111,8 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "gpt-4-1106-preview": "2023-04",
   "gpt-4-0125-preview": "2023-04",
   "gpt-4-vision-preview": "2023-04",
+  "gpt-4o": "2023-10",
+  "gpt-4o-2024-05-13": "2023-10"
 };
 
 export const DEFAULT_MODELS = [
@@ -170,6 +172,24 @@ export const DEFAULT_MODELS = [
   },
   {
     name: "gpt-4-turbo-preview",
+    available: true,
+    provider: {
+      id: "openai",
+      providerName: "OpenAI",
+      providerType: "openai",
+    },
+  },
+  {
+    name: "gpt-4o",
+    available: true,
+    provider: {
+      id: "openai",
+      providerName: "OpenAI",
+      providerType: "openai",
+    },
+  },
+  {
+    name: "gpt-4o-2024-05-13",
     available: true,
     provider: {
       id: "openai",
