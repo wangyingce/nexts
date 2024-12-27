@@ -298,6 +298,15 @@ export const DEFAULT_MODELS = [
     },
   },
   {
+    name: "claude-3.5-sonnet",
+    available: true,
+    provider: {
+      id: "anthropic",
+      providerName: "anthropic",
+      providerType: "anthropic",
+    },
+  },
+  {
     name: "o1-preview",
     available: true,
     provider: {
