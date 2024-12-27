@@ -298,7 +298,7 @@ export const DEFAULT_MODELS = [
     },
   },
   {
-    name: "claude-3-5-sonnet-latest",
+    name: "claude-3.5-sonnet-20240620",
     available: true,
     provider: {
       id: "anthropic",
