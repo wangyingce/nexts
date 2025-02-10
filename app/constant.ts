@@ -307,6 +307,15 @@ export const DEFAULT_MODELS = [
     },
   },
   {
+    name: "deepseek/deepseek-r1",
+    available: true,
+    provider: {
+      id: "deepseek",
+      providerName: "deepseek",
+      providerType: "deepseek",
+    },
+  },
+  {
     name: "o1-preview",
     available: true,
     provider: {
