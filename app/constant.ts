@@ -316,6 +316,15 @@ export const DEFAULT_MODELS = [
     },
   },
   {
+    name: "anthropic/claude-3.7-sonnet:thinking",
+    available: true,
+    provider: {
+      id: "anthropic",
+      providerName: "anthropic",
+      providerType: "anthropic",
+    },
+  },
+  {
     name: "deepseek/deepseek-r1",
     available: true,
     provider: {
