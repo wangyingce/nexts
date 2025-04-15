@@ -115,7 +115,8 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "gpt-4o-2024-05-13": "2023-10",
   "o1-preview": "2024-04",
   "o1-mini": "2025-01",
-  "o3-mini": "2025-02"
+  "o3-mini": "2025-02",
+  "gpt-4.1": "2025-04"
 };
 
 export const DEFAULT_MODELS = [
@@ -362,6 +363,15 @@ export const DEFAULT_MODELS = [
       providerType: "OpenAI",
     },
   },
+  {
+    name: "gpt-4.1",
+    available: true,
+    provider: {
+      id: "openai",
+      providerName: "OpenAI",
+      providerType: "OpenAI",
+    },
+  }
 ] as const;
 
 export const CHAT_PAGE_SIZE = 15;
