@@ -301,6 +301,15 @@ export const DEFAULT_MODELS = [
     },
   },
   {
+    name: "gemma-3-27b-it",
+    available: true,
+    provider: {
+      id: "google",
+      providerName: "Google",
+      providerType: "google",
+    },
+  },
+  {
     name: "anthropic/claude-3.5-sonnet",
     available: true,
     provider: {
