@@ -328,6 +328,15 @@ export const DEFAULT_MODELS = [
     },
   },
   {
+    name: "x-ai/grok-3-beta",
+    available: true,
+    provider: {
+      id: "x-ai",
+      providerName: "x-ai",
+      providerType: "x-ai",
+    },
+  },
+  {
     name: "deepseek/deepseek-r1",
     available: true,
     provider: {
