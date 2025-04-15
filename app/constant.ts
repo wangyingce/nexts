@@ -301,11 +301,11 @@ export const DEFAULT_MODELS = [
     },
   },
   {
-    name: "gemma-3-27b-it",
+    name: "google/gemma-3-27b-it",
     available: true,
     provider: {
       id: "google",
-      providerName: "Google",
+      providerName: "google",
       providerType: "google",
     },
   },
