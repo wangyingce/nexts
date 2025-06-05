@@ -240,7 +240,7 @@ const LunarCalendar = () => {
   `;
 
   return (
-    <div style={pageStyle}>
+    <div>
       <style>{keyframes}</style>
       <h1 style={headerStyle}>今天是十斋日吗？</h1>
       

@@ -14,6 +14,7 @@ import { getCSSVar, useMobileScreen } from "../utils";
 import dynamic from "next/dynamic";
 import { ModelProvider, Path, SlotID } from "../constant";
 import { ErrorBoundary } from "./error";
+import LunarCalendar from './LunarCalendar';
 
 import { getISOLang, getLang } from "../locales";
 
@@ -127,6 +128,7 @@ function Screen() {
   const location = useLocation();
   const isHome = location.pathname === Path.Home;
   const isAuth = location.pathname === Path.Auth;
+  const isLunar = location.pathname === Path.Lunar;
   const isMobileScreen = useMobileScreen();
   const shouldTightBorder =
     getClientConfig()?.isApp || (config.tightBorder && !isMobileScreen);
@@ -147,7 +149,10 @@ function Screen() {
       {isAuth ? (
         <>
           <AuthPage />
-        </>
+        </>) : isLunar ? (
+          <div className={styles["fullscreen-container"]}>
+        <LunarCalendar />
+        </div>
       ) : (
         <>
           <SideBar className={isHome ? styles["sidebar-show"] : ""} />

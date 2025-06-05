@@ -9,6 +9,8 @@ import Locale from "../locales";
 import BotIcon from "../icons/bot.svg";
 import { useEffect } from "react";
 import { getClientConfig } from "../config/client";
+import LunarCalendar from './LunarCalendar';
+
 
 export function AuthPage() {
   const navigate = useNavigate();
@@ -32,6 +34,7 @@ export function AuthPage() {
 
   return (
     <div className={styles["auth-page"]}>
+      {/* <LunarCalendar /> */}
       <div className={`no-dark ${styles["auth-logo"]}`}>
         <BotIcon />
       </div>
