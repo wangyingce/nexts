@@ -1,9 +1,9 @@
-import lunarCalendar from './lunarCalendar';
+import LunarCalendar from './LunarCalendar';
 
 function App() {
   return (
     <div className="App">
-      <lunarCalendar />
+      <LunarCalendar />
     </div>
   );
-}
+} 
