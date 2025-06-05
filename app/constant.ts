@@ -310,7 +310,7 @@ export const DEFAULT_MODELS = [
     },
   },
   {
-    name: "google/gemini-2.5-pro-preview-03-25",
+    name: "google/gemini-2.5-pro-preview-03-25 ",
     available: true,
     provider: {
       id: "google",
@@ -338,6 +338,15 @@ export const DEFAULT_MODELS = [
   },
   {
     name: "anthropic/claude-3.7-sonnet:thinking",
+    available: true,
+    provider: {
+      id: "anthropic",
+      providerName: "anthropic",
+      providerType: "anthropic",
+    },
+  },
+  {
+    name: "anthropic/claude-sonnet-4",
     available: true,
     provider: {
       id: "anthropic",
