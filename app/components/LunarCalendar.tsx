@@ -249,11 +249,11 @@ const LunarCalendar = () => {
         {result.message}
       </div>
       
-      <div style={lunarDisplayStyle}>
+      {/* <div style={lunarDisplayStyle}>
         <div style={lunarTitleStyle}>当前日期信息</div>
         <div style={dateInfoStyle}>公历: {solarDate.month}月{solarDate.day}日</div>
         <div style={dateInfoStyle}>农历: {lunarDate.month}月{lunarDate.day}日</div>
-      </div>
+      </div> */}
       
       <div style={{ 
         marginTop: '20px', 
