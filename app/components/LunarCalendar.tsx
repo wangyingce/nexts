@@ -265,6 +265,32 @@ const LunarCalendar = () => {
         <p>十斋日是指佛教中每月固定的十天持斋修行的日子</p>
         <p>包括农历每月的一日、八日、十四日、十五日、十八日、廿三日、廿四日、廿八日、廿九日、三十日</p>
       </div>
+      <div style={{ 
+        marginTop: '20px', 
+        fontSize: '0.5rem', 
+        color: '#666',
+        // color: '#8B0000',
+        textAlign: 'center',
+        maxWidth: '500px',
+        paddingTop: '50px'
+      }}>
+        <p>无需实名、不阻拦敏感话题、超便宜、全套最新的chatgpt、claude、google的ai机器人市场（ww.aimkts.life）</p>
+        <p>
+    <a 
+      href="https://www.aimkts.life" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      style={{ 
+        color: '#0066cc', 
+        textDecoration: 'underline',
+        cursor: 'pointer' 
+      }}
+    >
+      点我访问
+    </a>
+  </p>
+        <p>添加账号——联系wx：newchat0619</p>
+      </div>
     </div>
   );
 };
