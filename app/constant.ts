@@ -265,15 +265,15 @@ export const DEFAULT_MODELS = [
   //     providerType: "openai",
   //   },
   // },
-  // {
-  //   name: "gpt-3.5-turbo",
-  //   available: true,
-  //   provider: {
-  //     id: "openai",
-  //     providerName: "OpenAI",
-  //     providerType: "openai",
-  //   },
-  // },
+  {
+    name: "gpt-3.5-turbo",
+    available: true,
+    provider: {
+      id: "openai",
+      providerName: "OpenAI",
+      providerType: "openai",
+    },
+  },
   // {
   //   name: "gpt-3.5-turbo-0125",
   //   available: true,
