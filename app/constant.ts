@@ -7,7 +7,6 @@ export const RELEASE_URL = `${REPO_URL}/releases`;
 export const FETCH_COMMIT_URL = `https://api.github.com/repos/${OWNER}/${REPO}/commits?per_page=1`;
 export const FETCH_TAG_URL = `https://api.github.com/repos/${OWNER}/${REPO}/tags?per_page=1`;
 export const RUNTIME_CONFIG_DOM = "danger-runtime-config";
-
 export const DEFAULT_CORS_HOST = "https://a.nextweb.fun";
 export const DEFAULT_API_HOST = `${DEFAULT_CORS_HOST}/api/proxy`;
 export const OPENAI_BASE_URL = "https://api.openai.com";
@@ -117,7 +116,8 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "o1-preview": "2024-04",
   "o1-mini": "2025-01",
   "o3-mini": "2025-02",
-  "gpt-4.1": "2025-04"
+  "gpt-4.1": "2025-04",
+  "gpt-5-chat":"2025-08"
 };
 
 export const DEFAULT_MODELS = [
@@ -184,6 +184,15 @@ export const DEFAULT_MODELS = [
   //     providerType: "openai",
   //   },
   // },
+  {
+    name: "gpt-5-chat",
+    available: true,
+    provider: {
+      id: "openai",
+      providerName: "OpenAI",
+      providerType: "openai",
+    },
+  },
   {
     name: "gpt-4o",
     available: true,
