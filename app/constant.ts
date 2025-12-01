@@ -347,7 +347,16 @@ export const DEFAULT_MODELS = [
     },
   },
   {
-    name: "google/gemini-2.5-pro-preview-03-25 ",
+    name: "google/gemini-2.5-pro-preview-03-25",
+    available: true,
+    provider: {
+      id: "google",
+      providerName: "google",
+      providerType: "google",
+    },
+  },
+  {
+    name: "google/gemini-3-pro-preview",
     available: true,
     provider: {
       id: "google",
