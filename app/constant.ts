@@ -117,7 +117,9 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "o1-mini": "2025-01",
   "o3-mini": "2025-02",
   "gpt-4.1": "2025-04",
-  "gpt-5-chat":"2025-08"
+  "gpt-5-chat":"2025-08",
+  // 添加新模型的知识截止日期示例:
+  // "gpt-6": "2025-12",
 };
 
 export const DEFAULT_MODELS = [
@@ -428,7 +430,7 @@ export const DEFAULT_MODELS = [
     },
   },
   {
-    name: "o1-mini",
+    name: "o3-mini",
     available: true,
     provider: {
       id: "openai",
@@ -453,7 +455,26 @@ export const DEFAULT_MODELS = [
       providerName: "OpenAI",
       providerType: "OpenAI",
     },
-  }
+  },
+  {
+    name: "minimax/minimax-m2.5",
+    available: true,
+    provider: {
+      id: "minimax",
+      providerName: "minimax",
+      providerType: "minimax",
+    },
+  },
+  // 添加新模型示例:
+  // {
+  //   name: "gpt-6",  // 模型名称
+  //   available: true,  // 是否可用
+  //   provider: {
+  //     id: "openai",  // 提供商ID
+  //     providerName: "OpenAI",  // 提供商名称
+  //     providerType: "openai",  // 提供商类型
+  //   },
+  // },
 ] as const;
 
 export const CHAT_PAGE_SIZE = 15;
