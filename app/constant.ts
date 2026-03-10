@@ -103,91 +103,40 @@ Latex inline: $x^2$
 Latex block: $$e=mc^2$$
 `;
 
-export const SUMMARIZE_MODEL = "gpt-3.5-turbo";
+export const SUMMARIZE_MODEL = "gpt-5-nano";
 
 export const KnowledgeCutOffDate: Record<string, string> = {
-  default: "2021-09",
-  "gpt-4-turbo-preview": "2023-04",
-  "gpt-4-1106-preview": "2023-04",
-  "gpt-4-0125-preview": "2023-04",
-  "gpt-4-vision-preview": "2023-04",
-  "gpt-4o": "2023-10",
-  "gpt-4o-2024-05-13": "2023-10",
-  "o1-preview": "2024-04",
-  "o1-mini": "2025-01",
-  "o3-mini": "2025-02",
-  "gpt-4.1": "2025-04",
-  "gpt-5-chat":"2025-08",
-  // 添加新模型的知识截止日期示例:
-  // "gpt-6": "2025-12",
+  default: "2024-01",
+  // OpenAI 模型（无需前缀）
+  "gpt-5.4": "2025-06",
+  "gpt-5.4-pro": "2025-06",
+  "gpt-5-mini": "2025-06",
+  "gpt-5-nano": "2025-06",
+  // Google 模型
+  "google/gemini-3-flash-preview": "2025-06",
+  "google/gemini-2.5-pro": "2025-01",
+  "google/gemini-2.5-flash": "2025-01",
+  "google/gemini-2.5-flash-lite": "2025-01",
+  // Claude 模型
+  "anthropic/claude-opus-4-6": "2025-04",
+  "anthropic/claude-sonnet-4-6": "2025-04",
+  "anthropic/claude-haiku-4-5": "2025-01",
+  // xAI Grok 模型
+  "x-ai/grok-4-fast": "2025-06",
+  "x-ai/grok-3": "2024-12",
+  "x-ai/grok-3-mini": "2024-12",
+  // DeepSeek 模型
+  "deepseek/deepseek-v3.2": "2025-03",
+  "deepseek/deepseek-r1": "2025-01",
+  // MiniMax 模型
+  "minimax/minimax-m2.5": "2025-12",
+  "minimax/minimax-m2.1": "2025-06",
 };
 
 export const DEFAULT_MODELS = [
-  // {
-  //   name: "gpt-4",
-  //   available: true,
-  //   provider: {
-  //     id: "openai",
-  //     providerName: "OpenAI",
-  //     providerType: "openai",
-  //   },
-  // },
-  // {
-  //   name: "gpt-4-0314",
-  //   available: true,
-  //   provider: {
-  //     id: "openai",
-  //     providerName: "OpenAI",
-  //     providerType: "openai",
-  //   },
-  // },
-  // {
-  //   name: "gpt-4-0613",
-  //   available: true,
-  //   provider: {
-  //     id: "openai",
-  //     providerName: "OpenAI",
-  //     providerType: "openai",
-  //   },
-  // },
-  // {
-  //   name: "gpt-4-32k",
-  //   available: true,
-  //   provider: {
-  //     id: "openai",
-  //     providerName: "OpenAI",
-  //     providerType: "openai",
-  //   },
-  // },
-  // {
-  //   name: "gpt-4-32k-0314",
-  //   available: true,
-  //   provider: {
-  //     id: "openai",
-  //     providerName: "OpenAI",
-  //     providerType: "openai",
-  //   },
-  // },
-  // {
-  //   name: "gpt-4-32k-0613",
-  //   available: true,
-  //   provider: {
-  //     id: "openai",
-  //     providerName: "OpenAI",
-  //     providerType: "openai",
-  //   },
-  // },
-  // {
-  //   name: "gpt-4-turbo-preview",
-  //   available: true,
-  //   provider: {
-  //     id: "openai",
-  //     providerName: "OpenAI",
-  //     providerType: "openai",
-  //   },
-  // },
+  // ===== OpenAI 模型（无需前缀，项目原生支持）=====
   {
-    name: "gpt-5",
+    name: "gpt-5.4",
     available: true,
     provider: {
       id: "openai",
@@ -196,16 +145,7 @@ export const DEFAULT_MODELS = [
     },
   },
   {
-    name: "gpt-5-chat",
-    available: true,
-    provider: {
-      id: "openai",
-      providerName: "OpenAI",
-      providerType: "openai",
-    },
-  },
-  {
-    name: "gpt-5-nano",
+    name: "gpt-5.4-pro",
     available: true,
     provider: {
       id: "openai",
@@ -223,7 +163,7 @@ export const DEFAULT_MODELS = [
     },
   },
   {
-    name: "gpt-4o",
+    name: "gpt-5-nano",
     available: true,
     provider: {
       id: "openai",
@@ -231,107 +171,9 @@ export const DEFAULT_MODELS = [
       providerType: "openai",
     },
   },
-  // {
-  //   name: "gpt-4o-2024-05-13",
-  //   available: true,
-  //   provider: {
-  //     id: "openai",
-  //     providerName: "OpenAI",
-  //     providerType: "openai",
-  //   },
-  // },
-  // {
-  //   name: "gpt-4-1106-preview",
-  //   available: true,
-  //   provider: {
-  //     id: "openai",
-  //     providerName: "OpenAI",
-  //     providerType: "openai",
-  //   },
-  // },
-  // {
-  //   name: "gpt-4-0125-preview",
-  //   available: true,
-  //   provider: {
-  //     id: "openai",
-  //     providerName: "OpenAI",
-  //     providerType: "openai",
-  //   },
-  // },
-  // {
-  //   name: "gpt-4-vision-preview",
-  //   available: true,
-  //   provider: {
-  //     id: "openai",
-  //     providerName: "OpenAI",
-  //     providerType: "openai",
-  //   },
-  // },
+  // ===== Google 模型（需加 google/ 前缀）=====
   {
-    name: "gpt-3.5-turbo",
-    available: true,
-    provider: {
-      id: "openai",
-      providerName: "OpenAI",
-      providerType: "openai",
-    },
-  },
-  // {
-  //   name: "gpt-3.5-turbo-0125",
-  //   available: true,
-  //   provider: {
-  //     id: "openai",
-  //     providerName: "OpenAI",
-  //     providerType: "openai",
-  //   },
-  // },
-  // {
-  //   name: "gpt-3.5-turbo-0301",
-  //   available: true,
-  //   provider: {
-  //     id: "openai",
-  //     providerName: "OpenAI",
-  //     providerType: "openai",
-  //   },
-  // },
-  // {
-  //   name: "gpt-3.5-turbo-0613",
-  //   available: true,
-  //   provider: {
-  //     id: "openai",
-  //     providerName: "OpenAI",
-  //     providerType: "openai",
-  //   },
-  // },
-  // {
-  //   name: "gpt-3.5-turbo-1106",
-  //   available: true,
-  //   provider: {
-  //     id: "openai",
-  //     providerName: "OpenAI",
-  //     providerType: "openai",
-  //   },
-  // },
-  // {
-  //   name: "gpt-3.5-turbo-16k",
-  //   available: true,
-  //   provider: {
-  //     id: "openai",
-  //     providerName: "OpenAI",
-  //     providerType: "openai",
-  //   },
-  // },
-  // {
-  //   name: "gpt-3.5-turbo-16k-0613",
-  //   available: true,
-  //   provider: {
-  //     id: "openai",
-  //     providerName: "OpenAI",
-  //     providerType: "openai",
-  //   },
-  // },
-  {
-    name: "gemini-pro",
+    name: "google/gemini-3-flash-preview",
     available: true,
     provider: {
       id: "google",
@@ -340,75 +182,96 @@ export const DEFAULT_MODELS = [
     },
   },
   {
-    name: "google/gemma-3-27b-it",
+    name: "google/gemini-2.5-pro",
     available: true,
     provider: {
       id: "google",
-      providerName: "google",
+      providerName: "Google",
       providerType: "google",
     },
   },
   {
-    name: "google/gemini-2.5-pro-preview-03-25",
+    name: "google/gemini-2.5-flash",
     available: true,
     provider: {
       id: "google",
-      providerName: "google",
+      providerName: "Google",
       providerType: "google",
     },
   },
   {
-    name: "google/gemini-3-pro-preview",
+    name: "google/gemini-2.5-flash-lite",
     available: true,
     provider: {
       id: "google",
-      providerName: "google",
+      providerName: "Google",
       providerType: "google",
     },
   },
+  // ===== Claude 模型（需加 anthropic/ 前缀）=====
   {
-    name: "anthropic/claude-3.5-sonnet",
+    name: "anthropic/claude-opus-4-6",
     available: true,
     provider: {
       id: "anthropic",
-      providerName: "anthropic",
+      providerName: "Anthropic",
       providerType: "anthropic",
     },
   },
   {
-    name: "anthropic/claude-3.7-sonnet",
+    name: "anthropic/claude-sonnet-4-6",
     available: true,
     provider: {
       id: "anthropic",
-      providerName: "anthropic",
+      providerName: "Anthropic",
       providerType: "anthropic",
     },
   },
   {
-    name: "anthropic/claude-3.7-sonnet:thinking",
+    name: "anthropic/claude-haiku-4-5",
     available: true,
     provider: {
       id: "anthropic",
-      providerName: "anthropic",
+      providerName: "Anthropic",
       providerType: "anthropic",
     },
   },
+  // ===== xAI Grok 模型（需加 x-ai/ 前缀）=====
   {
-    name: "anthropic/claude-sonnet-4",
-    available: true,
-    provider: {
-      id: "anthropic",
-      providerName: "anthropic",
-      providerType: "anthropic",
-    },
-  },
-  {
-    name: "x-ai/grok-3-beta",
+    name: "x-ai/grok-4-fast",
     available: true,
     provider: {
       id: "x-ai",
-      providerName: "x-ai",
+      providerName: "xAI",
       providerType: "x-ai",
+    },
+  },
+  {
+    name: "x-ai/grok-3",
+    available: true,
+    provider: {
+      id: "x-ai",
+      providerName: "xAI",
+      providerType: "x-ai",
+    },
+  },
+  {
+    name: "x-ai/grok-3-mini",
+    available: true,
+    provider: {
+      id: "x-ai",
+      providerName: "xAI",
+      providerType: "x-ai",
+    },
+  },
+  // ===== DeepSeek 模型（需加 deepseek/ 前缀）=====
+  {
+    name: "deepseek/deepseek-v3.2",
+    available: true,
+    provider: {
+      id: "deepseek",
+      providerName: "DeepSeek",
+      providerType: "deepseek",
     },
   },
   {
@@ -416,65 +279,29 @@ export const DEFAULT_MODELS = [
     available: true,
     provider: {
       id: "deepseek",
-      providerName: "deepseek",
+      providerName: "DeepSeek",
       providerType: "deepseek",
     },
   },
-  {
-    name: "o1-preview",
-    available: true,
-    provider: {
-      id: "openai",
-      providerName: "OpenAI",
-      providerType: "OpenAI",
-    },
-  },
-  {
-    name: "o3-mini",
-    available: true,
-    provider: {
-      id: "openai",
-      providerName: "OpenAI",
-      providerType: "OpenAI",
-    },
-  },
-  {
-    name: "o3-mini",
-    available: true,
-    provider: {
-      id: "openai",
-      providerName: "OpenAI",
-      providerType: "OpenAI",
-    },
-  },
-  {
-    name: "gpt-4.1",
-    available: true,
-    provider: {
-      id: "openai",
-      providerName: "OpenAI",
-      providerType: "OpenAI",
-    },
-  },
+  // ===== MiniMax 模型（需加 minimax/ 前缀）=====
   {
     name: "minimax/minimax-m2.5",
     available: true,
     provider: {
       id: "minimax",
-      providerName: "minimax",
+      providerName: "MiniMax",
       providerType: "minimax",
     },
   },
-  // 添加新模型示例:
-  // {
-  //   name: "gpt-6",  // 模型名称
-  //   available: true,  // 是否可用
-  //   provider: {
-  //     id: "openai",  // 提供商ID
-  //     providerName: "OpenAI",  // 提供商名称
-  //     providerType: "openai",  // 提供商类型
-  //   },
-  // },
+  {
+    name: "minimax/minimax-m2.1",
+    available: true,
+    provider: {
+      id: "minimax",
+      providerName: "MiniMax",
+      providerType: "minimax",
+    },
+  },
 ] as const;
 
 export const CHAT_PAGE_SIZE = 15;
