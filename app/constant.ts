@@ -303,15 +303,15 @@ export const DEFAULT_MODELS = [
     },
   },
   // ===== 兼容性保留（供内部逻辑判断使用，不对外展示）=====
-  {
-    name: "gemini-pro",
-    available: false,
-    provider: {
-      id: "google",
-      providerName: "Google",
-      providerType: "google",
-    },
-  },
+  // {
+  //   name: "gemini-pro",
+  //   available: false,
+  //   provider: {
+  //     id: "google",
+  //     providerName: "Google",
+  //     providerType: "google",
+  //   },
+  // },
 ] as const;
 
 export const CHAT_PAGE_SIZE = 15;
