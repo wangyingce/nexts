@@ -92,7 +92,7 @@ export function ModelConfigList(props: {
         ></input>
       </ListItem>
 
-      {props.modelConfig.model === "gemini-2.5-flash-lite" ? null : (
+      {props.modelConfig.model === "google/gemini-2.5-flash-lite" ? null : (
         <>
           <ListItem
             title={Locale.Settings.PresencePenalty.Title}

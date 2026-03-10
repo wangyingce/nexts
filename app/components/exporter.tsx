@@ -307,7 +307,7 @@ export function PreviewActions(props: {
     setShouldExport(false);
 
     var api: ClientApi;
-    if (config.modelConfig.model === "gemini-2.5-flash-lite") {
+    if (config.modelConfig.model === "google/gemini-2.5-flash-lite") {
       api = new ClientApi(ModelProvider.GeminiPro);
     } else {
       api = new ClientApi(ModelProvider.GPT);

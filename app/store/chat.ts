@@ -303,7 +303,7 @@ export const useChatStore = createPersistStore(
         });
 
         var api: ClientApi;
-        if (modelConfig.model === "gemini-2.5-flash-lite") {
+        if (modelConfig.model === "google/gemini-2.5-flash-lite") {
           api = new ClientApi(ModelProvider.GeminiPro);
         } else {
           api = new ClientApi(ModelProvider.GPT);
