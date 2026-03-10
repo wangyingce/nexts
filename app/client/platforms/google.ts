@@ -12,7 +12,7 @@ import { getServerSideConfig } from "@/app/config/server";
 import de from "@/app/locales/de";
 export class GeminiProApi implements LLMApi {
   extractMessage(res: any) {
-    console.log("[Response] gemini-pro response: ", res);
+    console.log("[Response] gemini-2.5-flash-lite response: ", res);
 
     return (
       res?.candidates?.at(0)?.content?.parts.at(0)?.text ||

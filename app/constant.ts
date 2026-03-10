@@ -88,7 +88,7 @@ export const Azure = {
 
 export const Google = {
   ExampleEndpoint: "https://generativelanguage.googleapis.com/",
-  ChatPath: "v1beta/models/gemini-pro:generateContent",
+  ChatPath: "v1beta/models/gemini-2.5-flash-lite:generateContent",
 
   // /api/openai/v1/chat/completions
 };
@@ -304,7 +304,7 @@ export const DEFAULT_MODELS = [
   },
   // ===== 兼容性保留（供内部逻辑判断使用，不对外展示）=====
   // {
-  //   name: "gemini-pro",
+  //   name: "gemini-2.5-flash-lite",
   //   available: false,
   //   provider: {
   //     id: "google",
