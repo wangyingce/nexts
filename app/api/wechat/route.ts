@@ -325,11 +325,18 @@ export async function GET(req: NextRequest) {
 
     // 验证签名
     if (await verifySignature(msg_signature, timestamp, nonce, echostr)) {
-      console.log("URL验证成功，开始解密 echostr");
-      // 解密 echostr
+      console.log("URL验证成功");
+
+      // 临时：直接返回 echostr 看看企业微信的反应
+      console.log("直接返回未解密的 echostr");
+      return new NextResponse(echostr, { status: 200 });
+
+      /* 解密版本 - 暂时注释
+      console.log("开始解密 echostr");
       const decryptedEchostr = await decryptEchostr(echostr);
       console.log("解密后的 echostr:", decryptedEchostr);
       return new NextResponse(decryptedEchostr, { status: 200 });
+      */
     } else {
       console.log("URL验证失败：签名不匹配");
       return new NextResponse("验证失败", { status: 403 });
