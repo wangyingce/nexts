@@ -166,12 +166,16 @@ function base64Decode(str: string): Uint8Array {
 // 解密 echostr（企业微信加密格式）
 async function decryptEchostr(echostr: string): Promise<string> {
   try {
-    console.log("开始解密 echostr");
+    console.log("开始解密 echostr，长度:", echostr.length);
 
     // 1. AESKey = Base64_Decode(EncodingAESKey + "=")
     const aesKeyBase64 = config.encodingAESKey + "=";
     const aesKey = base64Decode(aesKeyBase64);
     console.log("AES Key 长度:", aesKey.length, "字节");
+
+    if (aesKey.length !== 32) {
+      throw new Error(`AES Key 长度错误: ${aesKey.length}，应该是 32 字节`);
+    }
 
     // 2. IV = AESKey 的前 16 字节
     const iv = aesKey.slice(0, 16);
@@ -199,13 +203,35 @@ async function decryptEchostr(echostr: string): Promise<string> {
     const decryptedBytes = new Uint8Array(decryptedBuffer);
     console.log("解密后总长度:", decryptedBytes.length, "字节");
 
+    // 打印前 20 字节用于调试
+    console.log("解密后前20字节:", Array.from(decryptedBytes.slice(0, 20)));
+
     // 6. 去除 PKCS7 填充
     const padLength = decryptedBytes[decryptedBytes.length - 1];
     console.log("填充长度:", padLength);
+
+    // 验证填充长度是否合理
+    if (padLength < 1 || padLength > 32) {
+      console.error("填充长度不合理:", padLength);
+      throw new Error(`PKCS7 填充长度错误: ${padLength}`);
+    }
+
+    // 验证填充是否正确
+    for (let i = 0; i < padLength; i++) {
+      if (decryptedBytes[decryptedBytes.length - 1 - i] !== padLength) {
+        console.error("PKCS7 填充验证失败");
+        throw new Error("PKCS7 填充格式错误");
+      }
+    }
+
     const unpadded = decryptedBytes.slice(0, decryptedBytes.length - padLength);
     console.log("去填充后长度:", unpadded.length, "字节");
 
     // 7. 解析结构: random(16B) + msg_len(4B) + msg + receiveid
+
+    if (unpadded.length < 20) {
+      throw new Error(`解密后数据太短: ${unpadded.length} 字节，至少需要 20 字节`);
+    }
 
     // 跳过前 16 字节随机数
     const afterRandom = unpadded.slice(16);
@@ -216,6 +242,10 @@ async function decryptEchostr(echostr: string): Promise<string> {
                      (afterRandom[2] << 8) |
                      afterRandom[3];
     console.log("消息长度:", msgLength, "字节");
+
+    if (msgLength < 0 || msgLength > afterRandom.length - 4) {
+      throw new Error(`消息长度异常: ${msgLength}，可用数据: ${afterRandom.length - 4}`);
+    }
 
     // 提取 msg
     const msgBytes = afterRandom.slice(4, 4 + msgLength);
@@ -228,6 +258,12 @@ async function decryptEchostr(echostr: string): Promise<string> {
 
     console.log("解密成功 - msg:", msg);
     console.log("receiveid:", receiveid);
+    console.log("receiveid 应该是:", config.corpId);
+
+    // 验证 receiveid
+    if (receiveid !== config.corpId) {
+      console.warn("警告: receiveid 不匹配！解密的:", receiveid, "配置的:", config.corpId);
+    }
 
     // 8. 返回 msg（不能有引号、BOM、换行符）
     return msg;
