@@ -44,7 +44,7 @@ async function getAccessToken() {
   }
 }
 
-// 调用 ChatGPT API 获取回复
+// 调用 AI API 获取回复（使用 DeepSeek-R1 模型）
 async function getChatGPTReply(userMessage: string): Promise<string> {
   try {
     const url = `${config.openaiBaseUrl}/v1/chat/completions`;
@@ -56,7 +56,7 @@ async function getChatGPTReply(userMessage: string): Promise<string> {
         Authorization: `Bearer ${config.openaiApiKey}`,
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo",
+        model: "deepseek/deepseek-r1",
         messages: [
           {
             role: "system",
