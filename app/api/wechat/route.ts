@@ -144,7 +144,9 @@ async function verifySignature(
 
 // Base64 解码
 function base64Decode(str: string): Uint8Array {
-  const binaryString = atob(str);
+  // 替换 URL safe 字符
+  const base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+  const binaryString = atob(base64);
   const bytes = new Uint8Array(binaryString.length);
   for (let i = 0; i < binaryString.length; i++) {
     bytes[i] = binaryString.charCodeAt(i);
@@ -155,13 +157,18 @@ function base64Decode(str: string): Uint8Array {
 // 解密 echostr（企业微信加密格式）
 async function decryptEchostr(echostr: string): Promise<string> {
   try {
-    // EncodingAESKey 是 base64 编码的密钥，需要添加 "=" 补齐
-    const aesKey = base64Decode(config.encodingAESKey + "=");
+    console.log("开始解密，原始 echostr:", echostr);
 
-    // 解码 echostr
+    // EncodingAESKey 是 base64 编码的 43 位密钥，需要补 "=" 变成 44 位
+    const aesKeyBase64 = config.encodingAESKey + "=";
+    const aesKey = base64Decode(aesKeyBase64);
+    console.log("AES Key 长度:", aesKey.length);
+
+    // 解码 echostr (可能包含 URL safe 字符)
     const encryptedData = base64Decode(echostr);
+    console.log("加密数据长度:", encryptedData.length);
 
-    // 提取 IV (前16字节)
+    // IV 是 AES Key 的前 16 字节
     const iv = aesKey.slice(0, 16);
 
     // 导入密钥
@@ -181,25 +188,37 @@ async function decryptEchostr(echostr: string): Promise<string> {
     );
 
     const decryptedBytes = new Uint8Array(decryptedBuffer);
+    console.log("解密后数据长度:", decryptedBytes.length);
 
-    // 移除填充（PKCS7）
+    // 企业微信加密格式：
+    // random(16B) + msg_len(4B) + msg + corp_id
+
+    // 移除 PKCS7 填充
     const padLength = decryptedBytes[decryptedBytes.length - 1];
-    const contentBytes = decryptedBytes.slice(0, decryptedBytes.length - padLength);
+    const unpadded = decryptedBytes.slice(0, decryptedBytes.length - padLength);
 
-    // 跳过前16字节的随机字符串
-    // 接下来4字节是消息长度
-    const msgLengthBytes = contentBytes.slice(16, 20);
-    const msgLength = (msgLengthBytes[0] << 24) | (msgLengthBytes[1] << 16) | (msgLengthBytes[2] << 8) | msgLengthBytes[3];
+    // 跳过前 16 字节随机数
+    const withoutRandom = unpadded.slice(16);
 
-    // 提取实际消息内容
-    const messageBytes = contentBytes.slice(20, 20 + msgLength);
+    // 读取消息长度（大端序）
+    const msgLength = (withoutRandom[0] << 24) |
+                     (withoutRandom[1] << 16) |
+                     (withoutRandom[2] << 8) |
+                     withoutRandom[3];
+
+    console.log("消息长度:", msgLength);
+
+    // 提取消息内容
+    const messageBytes = withoutRandom.slice(4, 4 + msgLength);
     const decoder = new TextDecoder();
     const message = decoder.decode(messageBytes);
 
+    console.log("解密后的消息:", message);
     return message;
   } catch (error) {
     console.error("解密 echostr 失败:", error);
-    // 如果解密失败，直接返回原始 echostr（可能不需要解密）
+    // 如果解密失败，尝试直接返回（可能不需要解密）
+    console.log("尝试直接返回 echostr");
     return echostr;
   }
 }
