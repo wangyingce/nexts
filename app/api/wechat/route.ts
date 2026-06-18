@@ -144,34 +144,43 @@ async function verifySignature(
 
 // Base64 解码
 function base64Decode(str: string): Uint8Array {
-  // 替换 URL safe 字符
-  const base64 = str.replace(/-/g, '+').replace(/_/g, '/');
-  const binaryString = atob(base64);
-  const bytes = new Uint8Array(binaryString.length);
-  for (let i = 0; i < binaryString.length; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
+  try {
+    // 替换 URL safe 字符
+    let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+    // 补齐 padding
+    while (base64.length % 4) {
+      base64 += '=';
+    }
+    const binaryString = atob(base64);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes;
+  } catch (error) {
+    console.error("Base64 解码失败:", error);
+    throw error;
   }
-  return bytes;
 }
 
 // 解密 echostr（企业微信加密格式）
 async function decryptEchostr(echostr: string): Promise<string> {
   try {
-    console.log("开始解密，原始 echostr:", echostr);
+    console.log("开始解密 echostr");
 
-    // EncodingAESKey 是 base64 编码的 43 位密钥，需要补 "=" 变成 44 位
+    // 1. AESKey = Base64_Decode(EncodingAESKey + "=")
     const aesKeyBase64 = config.encodingAESKey + "=";
     const aesKey = base64Decode(aesKeyBase64);
-    console.log("AES Key 长度:", aesKey.length);
+    console.log("AES Key 长度:", aesKey.length, "字节");
 
-    // 解码 echostr (可能包含 URL safe 字符)
-    const encryptedData = base64Decode(echostr);
-    console.log("加密数据长度:", encryptedData.length);
-
-    // IV 是 AES Key 的前 16 字节
+    // 2. IV = AESKey 的前 16 字节
     const iv = aesKey.slice(0, 16);
 
-    // 导入密钥
+    // 3. 解码 echostr
+    const encryptedData = base64Decode(echostr);
+    console.log("加密数据长度:", encryptedData.length, "字节");
+
+    // 4. 导入密钥
     const cryptoKey = await crypto.subtle.importKey(
       "raw",
       aesKey,
@@ -180,7 +189,7 @@ async function decryptEchostr(echostr: string): Promise<string> {
       ["decrypt"]
     );
 
-    // 解密
+    // 5. AES-256-CBC 解密
     const decryptedBuffer = await crypto.subtle.decrypt(
       { name: "AES-CBC", iv: iv },
       cryptoKey,
@@ -188,38 +197,43 @@ async function decryptEchostr(echostr: string): Promise<string> {
     );
 
     const decryptedBytes = new Uint8Array(decryptedBuffer);
-    console.log("解密后数据长度:", decryptedBytes.length);
+    console.log("解密后总长度:", decryptedBytes.length, "字节");
 
-    // 企业微信加密格式：
-    // random(16B) + msg_len(4B) + msg + corp_id
-
-    // 移除 PKCS7 填充
+    // 6. 去除 PKCS7 填充
     const padLength = decryptedBytes[decryptedBytes.length - 1];
+    console.log("填充长度:", padLength);
     const unpadded = decryptedBytes.slice(0, decryptedBytes.length - padLength);
+    console.log("去填充后长度:", unpadded.length, "字节");
+
+    // 7. 解析结构: random(16B) + msg_len(4B) + msg + receiveid
 
     // 跳过前 16 字节随机数
-    const withoutRandom = unpadded.slice(16);
+    const afterRandom = unpadded.slice(16);
 
-    // 读取消息长度（大端序）
-    const msgLength = (withoutRandom[0] << 24) |
-                     (withoutRandom[1] << 16) |
-                     (withoutRandom[2] << 8) |
-                     withoutRandom[3];
+    // 读取消息长度（网络字节序 = 大端序）
+    const msgLength = (afterRandom[0] << 24) |
+                     (afterRandom[1] << 16) |
+                     (afterRandom[2] << 8) |
+                     afterRandom[3];
+    console.log("消息长度:", msgLength, "字节");
 
-    console.log("消息长度:", msgLength);
+    // 提取 msg
+    const msgBytes = afterRandom.slice(4, 4 + msgLength);
+    const decoder = new TextDecoder("utf-8");
+    const msg = decoder.decode(msgBytes);
 
-    // 提取消息内容
-    const messageBytes = withoutRandom.slice(4, 4 + msgLength);
-    const decoder = new TextDecoder();
-    const message = decoder.decode(messageBytes);
+    // 提取 receiveid（剩余部分）
+    const receiveidBytes = afterRandom.slice(4 + msgLength);
+    const receiveid = decoder.decode(receiveidBytes);
 
-    console.log("解密后的消息:", message);
-    return message;
+    console.log("解密成功 - msg:", msg);
+    console.log("receiveid:", receiveid);
+
+    // 8. 返回 msg（不能有引号、BOM、换行符）
+    return msg;
   } catch (error) {
     console.error("解密 echostr 失败:", error);
-    // 如果解密失败，尝试直接返回（可能不需要解密）
-    console.log("尝试直接返回 echostr");
-    return echostr;
+    throw error;
   }
 }
 
