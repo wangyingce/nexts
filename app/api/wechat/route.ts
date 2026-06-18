@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import crypto from "crypto";
 
 // 企业微信配置（从环境变量读取）
 const config = {
@@ -123,16 +122,23 @@ async function sendTextMessage(
   }
 }
 
-// 验证签名
-function verifySignature(
+// 验证签名（使用 Web Crypto API）
+async function verifySignature(
   signature: string,
   timestamp: string,
   nonce: string,
   echostr: string
-): boolean {
+): Promise<boolean> {
   const arr = [config.token, timestamp, nonce, echostr].sort();
   const str = arr.join("");
-  const hash = crypto.createHash("sha1").update(str).digest("hex");
+
+  // 使用 Web Crypto API 计算 SHA-1
+  const encoder = new TextEncoder();
+  const data = encoder.encode(str);
+  const hashBuffer = await crypto.subtle.digest("SHA-1", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hash = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+
   return hash === signature;
 }
 
@@ -187,7 +193,7 @@ export async function GET(req: NextRequest) {
     });
 
     // 验证签名
-    if (verifySignature(msg_signature, timestamp, nonce, echostr)) {
+    if (await verifySignature(msg_signature, timestamp, nonce, echostr)) {
       console.log("URL验证成功");
       return new NextResponse(echostr, { status: 200 });
     } else {
