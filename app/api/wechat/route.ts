@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as crypto from "crypto";
 
 // 企业微信配置（从环境变量读取）
 const config = {
@@ -122,55 +123,26 @@ async function sendTextMessage(
   }
 }
 
-// 验证签名（使用 Web Crypto API）
-async function verifySignature(
+// 验证签名（使用 Node.js crypto）
+function verifySignature(
   signature: string,
   timestamp: string,
   nonce: string,
   echostr: string
-): Promise<boolean> {
+): boolean {
   const arr = [config.token, timestamp, nonce, echostr].sort();
   const str = arr.join("");
-
-  // 使用 Web Crypto API 计算 SHA-1
-  const encoder = new TextEncoder();
-  const data = encoder.encode(str);
-  const hashBuffer = await crypto.subtle.digest("SHA-1", data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hash = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
-
+  const hash = crypto.createHash("sha1").update(str).digest("hex");
   return hash === signature;
 }
 
-// Base64 解码
-function base64Decode(str: string): Uint8Array {
+// 解密 echostr（使用 Node.js crypto）
+function decryptEchostr(echostr: string): string {
   try {
-    // 替换 URL safe 字符
-    let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
-    // 补齐 padding
-    while (base64.length % 4) {
-      base64 += '=';
-    }
-    const binaryString = atob(base64);
-    const bytes = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
-    return bytes;
-  } catch (error) {
-    console.error("Base64 解码失败:", error);
-    throw error;
-  }
-}
-
-// 解密 echostr（企业微信加密格式）
-async function decryptEchostr(echostr: string): Promise<string> {
-  try {
-    console.log("开始解密 echostr，长度:", echostr.length);
+    console.log("开始解密 echostr");
 
     // 1. AESKey = Base64_Decode(EncodingAESKey + "=")
-    const aesKeyBase64 = config.encodingAESKey + "=";
-    const aesKey = base64Decode(aesKeyBase64);
+    const aesKey = Buffer.from(config.encodingAESKey + "=", "base64");
     console.log("AES Key 长度:", aesKey.length, "字节");
 
     if (aesKey.length !== 32) {
@@ -181,91 +153,69 @@ async function decryptEchostr(echostr: string): Promise<string> {
     const iv = aesKey.slice(0, 16);
 
     // 3. 解码 echostr
-    const encryptedData = base64Decode(echostr);
+    const encryptedData = Buffer.from(echostr, "base64");
     console.log("加密数据长度:", encryptedData.length, "字节");
 
-    // 4. 导入密钥
-    const cryptoKey = await crypto.subtle.importKey(
-      "raw",
-      aesKey,
-      { name: "AES-CBC" },
-      false,
-      ["decrypt"]
-    );
+    // 4. AES-256-CBC 解密
+    const decipher = crypto.createDecipheriv("aes-256-cbc", aesKey, iv);
+    decipher.setAutoPadding(false); // 手动处理 PKCS7 填充
 
-    // 5. AES-256-CBC 解密
-    const decryptedBuffer = await crypto.subtle.decrypt(
-      { name: "AES-CBC", iv: iv },
-      cryptoKey,
-      encryptedData
-    );
+    let decrypted = Buffer.concat([
+      decipher.update(encryptedData),
+      decipher.final()
+    ]);
 
-    const decryptedBytes = new Uint8Array(decryptedBuffer);
-    console.log("解密后总长度:", decryptedBytes.length, "字节");
+    console.log("解密后总长度:", decrypted.length, "字节");
 
-    // 打印前 20 字节用于调试
-    console.log("解密后前20字节:", Array.from(decryptedBytes.slice(0, 20)));
-
-    // 6. 去除 PKCS7 填充
-    const padLength = decryptedBytes[decryptedBytes.length - 1];
+    // 5. 去除 PKCS7 填充
+    const padLength = decrypted[decrypted.length - 1];
     console.log("填充长度:", padLength);
 
-    // 验证填充长度是否合理
     if (padLength < 1 || padLength > 32) {
-      console.error("填充长度不合理:", padLength);
       throw new Error(`PKCS7 填充长度错误: ${padLength}`);
     }
 
-    // 验证填充是否正确
+    // 验证填充
     for (let i = 0; i < padLength; i++) {
-      if (decryptedBytes[decryptedBytes.length - 1 - i] !== padLength) {
-        console.error("PKCS7 填充验证失败");
+      if (decrypted[decrypted.length - 1 - i] !== padLength) {
         throw new Error("PKCS7 填充格式错误");
       }
     }
 
-    const unpadded = decryptedBytes.slice(0, decryptedBytes.length - padLength);
+    const unpadded = decrypted.slice(0, decrypted.length - padLength);
     console.log("去填充后长度:", unpadded.length, "字节");
 
-    // 7. 解析结构: random(16B) + msg_len(4B) + msg + receiveid
+    // 6. 解析结构: random(16B) + msg_len(4B) + msg + receiveid
 
     if (unpadded.length < 20) {
-      throw new Error(`解密后数据太短: ${unpadded.length} 字节，至少需要 20 字节`);
+      throw new Error(`解密后数据太短: ${unpadded.length} 字节`);
     }
 
     // 跳过前 16 字节随机数
     const afterRandom = unpadded.slice(16);
 
     // 读取消息长度（网络字节序 = 大端序）
-    const msgLength = (afterRandom[0] << 24) |
-                     (afterRandom[1] << 16) |
-                     (afterRandom[2] << 8) |
-                     afterRandom[3];
+    const msgLength = afterRandom.readUInt32BE(0);
     console.log("消息长度:", msgLength, "字节");
 
     if (msgLength < 0 || msgLength > afterRandom.length - 4) {
-      throw new Error(`消息长度异常: ${msgLength}，可用数据: ${afterRandom.length - 4}`);
+      throw new Error(`消息长度异常: ${msgLength}`);
     }
 
     // 提取 msg
-    const msgBytes = afterRandom.slice(4, 4 + msgLength);
-    const decoder = new TextDecoder("utf-8");
-    const msg = decoder.decode(msgBytes);
+    const msg = afterRandom.slice(4, 4 + msgLength).toString("utf-8");
 
-    // 提取 receiveid（剩余部分）
-    const receiveidBytes = afterRandom.slice(4 + msgLength);
-    const receiveid = decoder.decode(receiveidBytes);
+    // 提取 receiveid
+    const receiveid = afterRandom.slice(4 + msgLength).toString("utf-8");
 
     console.log("解密成功 - msg:", msg);
     console.log("receiveid:", receiveid);
     console.log("receiveid 应该是:", config.corpId);
 
-    // 验证 receiveid
     if (receiveid !== config.corpId) {
-      console.warn("警告: receiveid 不匹配！解密的:", receiveid, "配置的:", config.corpId);
+      console.warn("警告: receiveid 不匹配！");
     }
 
-    // 8. 返回 msg（不能有引号、BOM、换行符）
     return msg;
   } catch (error) {
     console.error("解密 echostr 失败:", error);
@@ -308,7 +258,7 @@ function parseXML(xml: string) {
 }
 
 // GET 请求：URL 验证
-export async function GET(req: NextRequest) {
+export function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const msg_signature = searchParams.get("msg_signature") || "";
@@ -324,19 +274,12 @@ export async function GET(req: NextRequest) {
     });
 
     // 验证签名
-    if (await verifySignature(msg_signature, timestamp, nonce, echostr)) {
-      console.log("URL验证成功");
-
-      // 临时：直接返回 echostr 看看企业微信的反应
-      console.log("直接返回未解密的 echostr");
-      return new NextResponse(echostr, { status: 200 });
-
-      /* 解密版本 - 暂时注释
-      console.log("开始解密 echostr");
-      const decryptedEchostr = await decryptEchostr(echostr);
+    if (verifySignature(msg_signature, timestamp, nonce, echostr)) {
+      console.log("URL验证成功，开始解密 echostr");
+      // 解密 echostr
+      const decryptedEchostr = decryptEchostr(echostr);
       console.log("解密后的 echostr:", decryptedEchostr);
       return new NextResponse(decryptedEchostr, { status: 200 });
-      */
     } else {
       console.log("URL验证失败：签名不匹配");
       return new NextResponse("验证失败", { status: 403 });
@@ -397,4 +340,4 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export const runtime = "edge";
+export const runtime = "nodejs";
