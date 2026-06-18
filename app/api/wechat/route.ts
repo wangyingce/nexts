@@ -142,6 +142,68 @@ async function verifySignature(
   return hash === signature;
 }
 
+// Base64 解码
+function base64Decode(str: string): Uint8Array {
+  const binaryString = atob(str);
+  const bytes = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes;
+}
+
+// 解密 echostr（企业微信加密格式）
+async function decryptEchostr(echostr: string): Promise<string> {
+  try {
+    // EncodingAESKey 是 base64 编码的密钥，需要添加 "=" 补齐
+    const aesKey = base64Decode(config.encodingAESKey + "=");
+
+    // 解码 echostr
+    const encryptedData = base64Decode(echostr);
+
+    // 提取 IV (前16字节)
+    const iv = aesKey.slice(0, 16);
+
+    // 导入密钥
+    const cryptoKey = await crypto.subtle.importKey(
+      "raw",
+      aesKey,
+      { name: "AES-CBC" },
+      false,
+      ["decrypt"]
+    );
+
+    // 解密
+    const decryptedBuffer = await crypto.subtle.decrypt(
+      { name: "AES-CBC", iv: iv },
+      cryptoKey,
+      encryptedData
+    );
+
+    const decryptedBytes = new Uint8Array(decryptedBuffer);
+
+    // 移除填充（PKCS7）
+    const padLength = decryptedBytes[decryptedBytes.length - 1];
+    const contentBytes = decryptedBytes.slice(0, decryptedBytes.length - padLength);
+
+    // 跳过前16字节的随机字符串
+    // 接下来4字节是消息长度
+    const msgLengthBytes = contentBytes.slice(16, 20);
+    const msgLength = (msgLengthBytes[0] << 24) | (msgLengthBytes[1] << 16) | (msgLengthBytes[2] << 8) | msgLengthBytes[3];
+
+    // 提取实际消息内容
+    const messageBytes = contentBytes.slice(20, 20 + msgLength);
+    const decoder = new TextDecoder();
+    const message = decoder.decode(messageBytes);
+
+    return message;
+  } catch (error) {
+    console.error("解密 echostr 失败:", error);
+    // 如果解密失败，直接返回原始 echostr（可能不需要解密）
+    return echostr;
+  }
+}
+
 // 解析 XML 消息
 function parseXML(xml: string) {
   try {
@@ -194,8 +256,11 @@ export async function GET(req: NextRequest) {
 
     // 验证签名
     if (await verifySignature(msg_signature, timestamp, nonce, echostr)) {
-      console.log("URL验证成功");
-      return new NextResponse(echostr, { status: 200 });
+      console.log("URL验证成功，开始解密 echostr");
+      // 解密 echostr
+      const decryptedEchostr = await decryptEchostr(echostr);
+      console.log("解密后的 echostr:", decryptedEchostr);
+      return new NextResponse(decryptedEchostr, { status: 200 });
     } else {
       console.log("URL验证失败：签名不匹配");
       return new NextResponse("验证失败", { status: 403 });
